@@ -538,11 +538,21 @@ function CamerasPanel({ facilityId }: { facilityId: number | null }) {
 function GatesPanel({ facilityId }: { facilityId: number | null }) {
   const queryClient = useQueryClient();
   const { confirm, dialog } = useConfirm();
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ name: '', type: 'ENTRY' });
+
   const { data: gates } = useQuery({ queryKey: ['gates'], queryFn: getGates });
-  const list = gates?.filter((g: any) => !facilityId || g.facility_id === facilityId);
+  const list = gates?.filter((g: any) => !facilityId || g.facility_id === facilityId) ?? [];
+  const entryGates = list.filter((g: any) => gateTypeOf(g) === 'ENTRY');
+  const exitGates  = list.filter((g: any) => gateTypeOf(g) === 'EXIT');
+
   const create = useMutation({
     mutationFn: (payload: any) => createGate(payload),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['gates'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['gates'] });
+      setShowForm(false);
+      setForm({ name: '', type: 'ENTRY' });
+    },
   });
   const regen = useMutation({
     mutationFn: (id: number) => regenerateGateQr(id),
@@ -555,61 +565,163 @@ function GatesPanel({ facilityId }: { facilityId: number | null }) {
 
   if (!facilityId) return <EmptyState title="Select a facility to manage gates." />;
 
+  const handleAdd = () => {
+    if (!form.name.trim()) return;
+    create.mutate({
+      facility_id: facilityId,
+      name: form.name.trim(),
+      gate_type: form.type,
+      qr_code: `GATE_${Date.now()}`,
+    });
+  };
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {dialog}
-      <button
-        className="rounded bg-accent-brand px-3 py-1.5 text-sm text-white"
-        onClick={() => {
-          const name = prompt('Gate name');
-          if (name)
-            create.mutate({
-              facility_id: facilityId,
-              name,
-              gate_type: 'ENTRY',
-              qr_code: `GATE_${Date.now()}`,
-            });
-        }}
-      >
-        Add gate
-      </button>
-      {!list?.length ? (
-        <EmptyState title="No gates configured for this facility." />
+
+      {/* ── Add gate button / inline form ──────────────────────────── */}
+      {!showForm ? (
+        <button
+          className="rounded bg-accent-brand px-3 py-1.5 text-sm text-white hover:opacity-90 transition-opacity"
+          onClick={() => setShowForm(true)}
+        >
+          + Add gate
+        </button>
       ) : (
-        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {list.map((g: any) => {
-            const id = gateIdOf(g)!;
-            const payload = g.qr_code || JSON.stringify({ gateId: id });
-            return (
-              <div key={id} className="rounded-lg border border-border-hairline bg-bg-surface p-4 text-center">
-                <p className="font-medium">{g.name}</p>
-                <p className="mb-3 text-xs text-text-muted">{gateTypeOf(g)}</p>
-                <div className="mx-auto mb-3 inline-block bg-white p-2">
-                  <QRCodeSVG value={payload} size={128} />
-                </div>
-                <p className="mb-2 font-mono text-[10px] text-text-muted">{payload}</p>
-                <div className="flex justify-center gap-2">
-                  <button className="text-xs text-accent-brand" onClick={() => regen.mutate(id)}>
-                    Regenerate
-                  </button>
-                  <button
-                    className="text-xs text-signal-occupied"
-                    onClick={() =>
-                      confirm({
-                        title: 'Delete gate',
-                        body: `Delete ${g.name}?`,
-                        action: () => remove.mutate(id),
-                      })
-                    }
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+        <div className="rounded-lg border border-border-hairline bg-bg-surface p-4 space-y-3 max-w-sm">
+          <p className="text-sm font-semibold text-text-primary">New Gate</p>
+
+          {/* Gate name */}
+          <div>
+            <label className="block text-xs text-text-muted mb-1">Gate Name</label>
+            <input
+              autoFocus
+              type="text"
+              placeholder="e.g. Main Entry, Block B Exit"
+              value={form.name}
+              onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+              className="w-full rounded border border-border-hairline bg-bg-base px-3 py-1.5 text-sm text-text-primary focus:outline-none focus:border-accent-brand"
+            />
+          </div>
+
+          {/* Gate type */}
+          <div>
+            <label className="block text-xs text-text-muted mb-1">Gate Type</label>
+            <div className="flex gap-2">
+              {['ENTRY', 'EXIT'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setForm(f => ({ ...f, type: t }))}
+                  className={`flex-1 rounded border py-2 text-xs font-semibold transition-colors ${
+                    form.type === t
+                      ? t === 'ENTRY'
+                        ? 'border-green-500 bg-green-500/10 text-green-400'
+                        : 'border-orange-500 bg-orange-500/10 text-orange-400'
+                      : 'border-border-hairline text-text-muted hover:border-gray-500'
+                  }`}
+                >
+                  {t === 'ENTRY' ? '→ Entry Gate' : 'Exit Gate ←'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-1">
+            <button
+              disabled={!form.name.trim() || create.isPending}
+              onClick={handleAdd}
+              className="rounded bg-accent-brand px-4 py-1.5 text-sm text-white disabled:opacity-40"
+            >
+              {create.isPending ? 'Adding…' : 'Add Gate'}
+            </button>
+            <button
+              onClick={() => { setShowForm(false); setForm({ name: '', type: 'ENTRY' }); }}
+              className="rounded border border-border-hairline px-4 py-1.5 text-sm text-text-muted hover:text-text-primary"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
+
+      {list.length === 0 ? (
+        <EmptyState title="No gates configured for this facility." />
+      ) : (
+        <div className="space-y-6">
+          {/* Entry gates */}
+          {entryGates.length > 0 && (
+            <GateSection
+              title="Entry Gates"
+              accentClass="text-green-400"
+              dotClass="bg-green-500"
+              gates={entryGates}
+              onRegen={id => regen.mutate(id)}
+              onDelete={(id, name) => confirm({ title: 'Delete gate', body: `Delete "${name}"?`, action: () => remove.mutate(id) })}
+            />
+          )}
+
+          {/* Exit gates */}
+          {exitGates.length > 0 && (
+            <GateSection
+              title="Exit Gates"
+              accentClass="text-orange-400"
+              dotClass="bg-orange-500"
+              gates={exitGates}
+              onRegen={id => regen.mutate(id)}
+              onDelete={(id, name) => confirm({ title: 'Delete gate', body: `Delete "${name}"?`, action: () => remove.mutate(id) })}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function GateSection({
+  title, accentClass, dotClass, gates, onRegen, onDelete,
+}: {
+  title: string;
+  accentClass: string;
+  dotClass: string;
+  gates: any[];
+  onRegen: (id: number) => void;
+  onDelete: (id: number, name: string) => void;
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-3">
+        <span className={`w-2 h-2 rounded-full ${dotClass}`} />
+        <span className={`text-sm font-semibold ${accentClass}`}>{title}</span>
+        <span className="text-xs text-text-muted">({gates.length})</span>
+      </div>
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {gates.map((g: any) => {
+          const id = gateIdOf(g)!;
+          const payload = g.qr_code || JSON.stringify({ gateId: id });
+          return (
+            <div key={id} className="rounded-lg border border-border-hairline bg-bg-surface p-4 text-center">
+              <p className="font-medium text-text-primary">{g.name}</p>
+              <p className={`mb-3 text-xs font-semibold ${accentClass}`}>{gateTypeOf(g)}</p>
+              <div className="mx-auto mb-3 inline-block bg-white p-2 rounded">
+                <QRCodeSVG value={payload} size={128} />
+              </div>
+              <p className="mb-2 font-mono text-[10px] text-text-muted break-all">{payload}</p>
+              <div className="flex justify-center gap-3">
+                <button className="text-xs text-accent-brand hover:underline" onClick={() => onRegen(id)}>
+                  Regenerate
+                </button>
+                <button
+                  className="text-xs text-signal-occupied hover:underline"
+                  onClick={() => onDelete(id, g.name)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

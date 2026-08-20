@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../providers/session_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class ScanGateScreen extends ConsumerStatefulWidget {
@@ -29,11 +30,10 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
   }
 
   int? _parseGateId(String raw) {
-    final trimmed = raw.trim();
-    final asInt = int.tryParse(trimmed);
+    final asInt = int.tryParse(raw.trim());
     if (asInt != null) return asInt;
     try {
-      final decoded = jsonDecode(trimmed) as Map<String, dynamic>;
+      final decoded = jsonDecode(raw.trim()) as Map<String, dynamic>;
       return (decoded['gateId'] ?? decoded['gate_id'] ?? decoded['id']) as int?;
     } catch (_) {
       return null;
@@ -58,7 +58,9 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
         ref.read(lastCompletedSessionProvider.notifier).state = completed;
         context.pushReplacement('/amount-due');
       } else {
-        final detection = await ref.read(activeSessionProvider.notifier).scanEntry(gateId: gateId);
+        final detection = await ref
+            .read(activeSessionProvider.notifier)
+            .scanEntry(gateId: gateId);
         if (!mounted) return;
         ref.read(pendingEntryProvider.notifier).state = detection;
         context.pushReplacement('/confirm-vehicle?gateId=$gateId');
@@ -82,38 +84,48 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final title = widget.isExit ? 'Scan Exit Gate' : 'Scan Gate';
+    final title = widget.isExit ? 'Scan Exit Gate' : 'Scan Entry Gate';
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18)),
+        backgroundColor: Colors.black,
+        title: Text(title),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFF94A3B8)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
           onPressed: () => context.pop(),
         ),
         elevation: 0,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       body: Column(
         children: [
           Expanded(
             child: Stack(
               children: [
-                MobileScanner(key: const Key('qr_scanner'), controller: _scanCtrl, onDetect: _onDetect),
+                MobileScanner(
+                    key: const Key('qr_scanner'),
+                    controller: _scanCtrl,
+                    onDetect: _onDetect),
                 Center(
                   child: Container(
-                    width: 220,
-                    height: 220,
+                    width: 210,
+                    height: 210,
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF6366F1), width: 2.5),
-                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Pk.primaryLt, width: 2),
+                      borderRadius: Pk.r8,
                     ),
                   ),
                 ),
                 if (_loading)
                   Container(
                     color: Colors.black54,
-                    child: const Center(child: CircularProgressIndicator(color: Color(0xFF6366F1))),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                          color: Pk.primary, strokeWidth: 2),
+                    ),
                   ),
               ],
             ),
@@ -121,8 +133,8 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
           Container(
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
             decoration: const BoxDecoration(
-              color: Color(0xFF111827),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              color: Pk.surface,
+              border: Border(top: BorderSide(color: Pk.border)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,19 +142,23 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
                 Text(
                   widget.isExit
                       ? 'Point camera at the exit gate QR code'
-                      : 'Point camera at the gate QR code',
-                  style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+                      : 'Point camera at the entry gate QR code',
+                  style: const TextStyle(
+                      color: Pk.textSecondary, fontSize: 13),
                 ),
                 if (_errorMsg != null) ...[
-                  const SizedBox(height: 12),
-                  Text(_errorMsg!, style: const TextStyle(color: Color(0xFFF87171), fontSize: 13)),
+                  const SizedBox(height: 10),
+                  Text(_errorMsg!,
+                      style: const TextStyle(
+                          color: Pk.dangerLt, fontSize: 13)),
                 ],
                 const SizedBox(height: 16),
                 GradientButton(
                   key: const Key('simulate_scan_button'),
                   label: 'Simulate Scan',
                   icon: Icons.qr_code_2_rounded,
-                  onPressed: () => _startFlow(gateId: widget.isExit ? 2 : 1),
+                  onPressed: () =>
+                      _startFlow(gateId: widget.isExit ? 2 : 1),
                 ),
               ],
             ),

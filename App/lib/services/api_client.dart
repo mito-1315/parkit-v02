@@ -7,7 +7,7 @@ import '../models/parking_session.dart';
 import '../models/user.dart';
 import '../models/vehicle.dart';
 
-const _baseUrl = 'http://localhost:4000/api/v1';
+const _baseUrl = 'http://192.168.0.114:4000/api/v1';
 const _keyAccess = 'accessToken';
 const _keyRefresh = 'refreshToken';
 

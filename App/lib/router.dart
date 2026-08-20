@@ -14,7 +14,7 @@ import 'screens/register_screen.dart';
 import 'screens/scan_gate_screen.dart';
 import 'screens/slot_allocated_screen.dart';
 import 'screens/vehicles_screen.dart';
-import 'theme.dart';
+import 'theme.dart' show parkitTheme;
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -94,7 +94,16 @@ GoRouter buildRouter(WidgetRef ref) {
 /// Notifies [GoRouter] to re-evaluate redirects whenever the auth state changes.
 class _AuthListenable extends ChangeNotifier {
   _AuthListenable(WidgetRef ref) {
-    ref.listen(authProvider, (_, __) => notifyListeners());
+    // listenManual is safe to call outside build (unlike ref.listen).
+    _sub = ref.listenManual(authProvider, (_, __) => notifyListeners());
+  }
+
+  late final ProviderSubscription<dynamic> _sub;
+
+  @override
+  void dispose() {
+    _sub.close();
+    super.dispose();
   }
 }
 
@@ -118,9 +127,9 @@ class _RouterScopeState extends ConsumerState<RouterScope> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Parker — Smart Parking',
+      title: 'Parkit',
       debugShowCheckedModeBanner: false,
-      theme: buildParkerTheme(),
+      theme: parkitTheme(),
       routerConfig: _router,
     );
   }

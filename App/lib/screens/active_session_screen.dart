@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../models/parking_session.dart';
 import '../providers/session_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class ActiveSessionScreen extends ConsumerStatefulWidget {
@@ -25,6 +26,16 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
   void initState() {
     super.initState();
     _startTicker();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ensureConfirmed());
+  }
+
+  Future<void> _ensureConfirmed() async {
+    final session = ref.read(activeSessionProvider).value;
+    if (session != null && session.status == SessionStatus.reserved) {
+      try {
+        await ref.read(activeSessionProvider.notifier).confirmParked(session.id);
+      } catch (_) {}
+    }
   }
 
   void _startTicker() {
@@ -44,7 +55,7 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
     super.dispose();
   }
 
-  String _formatElapsed(Duration d) {
+  String _fmt(Duration d) {
     final h = d.inHours.toString().padLeft(2, '0');
     final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
@@ -56,37 +67,32 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
     final sessionAsync = ref.watch(activeSessionProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: const Text(
-          'Active Session',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18),
-        ),
+        backgroundColor: Pk.bg,
+        title: const Text('Active Session'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF94A3B8)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
           onPressed: () => context.pop(),
         ),
-        elevation: 0,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       body: sessionAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+          child: CircularProgressIndicator(color: Pk.primary, strokeWidth: 2),
         ),
         error: (e, _) => Center(
           child: Text(e.toString(),
-              style: const TextStyle(color: Color(0xFFF87171))),
+              style: const TextStyle(color: Pk.dangerLt, fontSize: 13)),
         ),
         data: (session) {
-          if (session == null ||
-              session.status == SessionStatus.completed) {
+          if (session == null || session.status == SessionStatus.completed) {
             return const Center(
-              child: Text(
-                'No active session',
-                style: TextStyle(color: Color(0xFF94A3B8)),
-              ),
+              child: Text('No active session',
+                  style: TextStyle(color: Pk.textSecondary)),
             );
           }
 
@@ -96,109 +102,120 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
               slot?.zone?.facility?.name ??
               'Parking Facility';
 
-          // Sync elapsed from entryTime if timer not yet populated.
           if (_elapsed == Duration.zero && session.entryTime != null) {
             _elapsed = DateTime.now().difference(session.entryTime!);
           }
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ─── Elapsed time ──────────────────────────────────
+                // ─── Elapsed timer ─────────────────────────────────────
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 28),
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF1E3A2F), Color(0xFF0F2A1E)],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: const Color(0xFF4ADE80).withOpacity(0.2)),
+                    color: Pk.surface,
+                    borderRadius: Pk.r8,
+                    border: Border.all(color: Pk.successLt.withOpacity(0.25)),
                   ),
                   child: Column(
                     children: [
-                      const Text(
-                        'Time Parked',
-                        style: TextStyle(
-                            color: Color(0xFF4ADE80), fontSize: 13),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 7,
+                            height: 7,
+                            decoration: BoxDecoration(
+                              color: Pk.successLt,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          const Text(
+                            'TIME PARKED',
+                            style: TextStyle(
+                              color: Pk.successLt,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.0,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
                       Text(
-                        _formatElapsed(_elapsed),
+                        _fmt(_elapsed),
                         key: const Key('elapsed_timer'),
                         style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 44,
-                          fontWeight: FontWeight.w900,
+                          color: Pk.textPrimary,
+                          fontSize: 46,
+                          fontWeight: FontWeight.w800,
                           fontFamily: 'monospace',
-                          letterSpacing: 2,
+                          letterSpacing: 4,
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // ─── Session info ──────────────────────────────────
-                _InfoCard(
-                  children: [
-                    _Row(label: 'Facility', value: facilityName),
-                    _Row(
-                        label: 'Slot',
-                        value: slot?.label ?? '—',
-                        accent: true),
-                    if (slot?.zone?.name != null)
-                      _Row(label: 'Zone', value: slot!.zone!.name),
-                    if (slot?.floor != null)
-                      _Row(label: 'Floor', value: slot!.floor.toString()),
-                  ],
                 ),
                 const SizedBox(height: 16),
 
-                if (vehicle != null)
-                  _InfoCard(
-                    children: [
-                      _Row(
-                          label: 'Vehicle', value: vehicle.licensePlate),
-                      if (vehicle.make != null || vehicle.model != null)
-                        _Row(
-                          label: 'Description',
-                          value: [
-                            if (vehicle.make != null) vehicle.make!,
-                            if (vehicle.model != null) vehicle.model!,
-                          ].join(' '),
-                        ),
-                    ],
-                  ),
-                const SizedBox(height: 28),
+                // ─── Details ───────────────────────────────────────────
+                _Section(children: [
+                  _Row('Facility', facilityName),
+                  _divider(),
+                  _Row('Slot', slot?.label ?? '—', accent: true),
+                  if (slot?.zone?.name != null) ...[
+                    _divider(),
+                    _Row('Zone', slot!.zone!.name),
+                  ],
+                  if (slot?.floor != null) ...[
+                    _divider(),
+                    _Row('Floor', slot!.floor.toString()),
+                  ],
+                ]),
+                const SizedBox(height: 12),
 
-                // ─── Exit instructions ─────────────────────────────
+                if (vehicle != null)
+                  _Section(children: [
+                    _Row('Plate', vehicle.licensePlate),
+                    if (vehicle.make != null || vehicle.model != null) ...[
+                      _divider(),
+                      _Row(
+                        'Vehicle',
+                        [
+                          if (vehicle.make != null) vehicle.make!,
+                          if (vehicle.model != null) vehicle.model!,
+                        ].join(' '),
+                      ),
+                    ],
+                  ]),
+
+                const SizedBox(height: 16),
+
+                // ─── Info banner ───────────────────────────────────────
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFBBF24).withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                        color: const Color(0xFFFBBF24).withOpacity(0.2)),
+                    color: Pk.surface2,
+                    borderRadius: Pk.r6,
+                    border: Border.all(color: Pk.border2),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: const [
                       Icon(Icons.info_outline_rounded,
-                          color: Color(0xFFFBBF24), size: 18),
+                          color: Pk.textMuted, size: 16),
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          'To exit: drive to the exit gate and scan its QR code, '
-                          'or use the button below for a manual exit (demo mode).',
+                          'Drive to the exit gate and scan its QR code to end the session.',
                           style: TextStyle(
-                            color: Color(0xFF94A3B8),
-                            fontSize: 13,
-                            height: 1.5,
-                          ),
+                              color: Pk.textSecondary,
+                              fontSize: 13,
+                              height: 1.5),
                         ),
                       ),
                     ],
@@ -206,7 +223,7 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // ─── Manual exit button ────────────────────────────
+                // ─── Exit button ───────────────────────────────────────
                 GradientButton(
                   key: const Key('manual_exit_button'),
                   label: 'Scan Exit Gate',
@@ -221,28 +238,24 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
       ),
     );
   }
+
+  Widget _divider() =>
+      const Divider(color: Pk.border, height: 1, thickness: 1);
 }
 
-class _InfoCard extends StatelessWidget {
+class _Section extends StatelessWidget {
   final List<Widget> children;
-  const _InfoCard({required this.children});
+  const _Section({required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        color: Pk.surface,
+        borderRadius: Pk.r8,
+        border: Border.all(color: Pk.border),
       ),
-      child: Column(
-        children: children
-            .expand((w) => [w, const SizedBox(height: 10)])
-            .toList()
-          ..removeLast(),
-      ),
+      child: Column(children: children),
     );
   }
 }
@@ -251,27 +264,27 @@ class _Row extends StatelessWidget {
   final String label;
   final String value;
   final bool accent;
-
-  const _Row({required this.label, required this.value, this.accent = false});
+  const _Row(this.label, this.value, {this.accent = false});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            color: accent ? const Color(0xFF6366F1) : Colors.white,
-            fontSize: accent ? 18 : 14,
-            fontWeight: accent ? FontWeight.w800 : FontWeight.w600,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: const TextStyle(color: Pk.textSecondary, fontSize: 13)),
+          Text(
+            value,
+            style: TextStyle(
+              color: accent ? Pk.primaryLt : Pk.textPrimary,
+              fontSize: accent ? 17 : 14,
+              fontWeight: accent ? FontWeight.w800 : FontWeight.w500,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

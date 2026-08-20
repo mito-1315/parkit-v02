@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../providers/session_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class ScanExitScreen extends ConsumerStatefulWidget {
@@ -27,11 +28,10 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
   }
 
   int? _parseGateId(String raw) {
-    final trimmed = raw.trim();
-    final asInt = int.tryParse(trimmed);
+    final asInt = int.tryParse(raw.trim());
     if (asInt != null) return asInt;
     try {
-      final decoded = jsonDecode(trimmed) as Map<String, dynamic>;
+      final decoded = jsonDecode(raw.trim()) as Map<String, dynamic>;
       return (decoded['gateId'] ?? decoded['gate_id'] ?? decoded['id']) as int?;
     } catch (_) {
       return null;
@@ -46,10 +46,9 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
     });
     try {
       final active = ref.read(activeSessionProvider).value;
-      final completed = await ref.read(activeSessionProvider.notifier).scanExit(
-            gateId: gateId,
-            sessionId: active?.id,
-          );
+      final completed = await ref
+          .read(activeSessionProvider.notifier)
+          .scanExit(gateId: gateId, sessionId: active?.id);
       ref.read(lastCompletedSessionProvider.notifier).state = completed;
       if (!mounted) return;
       context.pushReplacement('/amount-due');
@@ -63,11 +62,14 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: const Text('Scan Exit Gate',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        backgroundColor: Colors.black,
+        title: const Text('Scan Exit Gate'),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       body: Column(
         children: [
@@ -79,26 +81,50 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
                   onDetect: (capture) {
                     final raw = capture.barcodes.firstOrNull?.rawValue;
                     if (raw == null) return;
-                    final id = _parseGateId(raw) ?? 2;
-                    _exit(id);
+                    _exit(_parseGateId(raw) ?? 2);
                   },
+                ),
+                Center(
+                  child: Container(
+                    width: 210,
+                    height: 210,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Pk.warning, width: 2),
+                      borderRadius: Pk.r8,
+                    ),
+                  ),
                 ),
                 if (_busy)
                   const ColoredBox(
                     color: Colors.black54,
                     child: Center(
-                      child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+                      child: CircularProgressIndicator(
+                          color: Pk.primary, strokeWidth: 2),
                     ),
                   ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+            decoration: const BoxDecoration(
+              color: Pk.surface,
+              border: Border(top: BorderSide(color: Pk.border)),
+            ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (_error != null)
-                  Text(_error!, style: const TextStyle(color: Color(0xFFF87171))),
+                const Text(
+                  'Point camera at the exit gate QR code',
+                  style: TextStyle(color: Pk.textSecondary, fontSize: 13),
+                ),
+                if (_error != null) ...[
+                  const SizedBox(height: 10),
+                  Text(_error!,
+                      style: const TextStyle(
+                          color: Pk.dangerLt, fontSize: 13)),
+                ],
+                const SizedBox(height: 16),
                 GradientButton(
                   key: const Key('simulate_exit_scan_button'),
                   label: 'Simulate Exit Scan',

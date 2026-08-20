@@ -157,6 +157,3 @@ class PendingGateScan {
   });
 }
 
-final pendingEntryProvider = StateProvider<PendingGateScan?>((ref) => null);
-final lastCompletedSessionProvider = StateProvider<ParkingSession?>((ref) => null);
-

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../models/parking_session.dart';
 import '../providers/session_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/slot_badge.dart';
 
@@ -18,7 +19,7 @@ class SlotAllocatedScreen extends ConsumerStatefulWidget {
 }
 
 class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
-    with SingleTickerStateMixin {
+    with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scaleAnim;
   late Animation<double> _fadeAnim;
@@ -29,14 +30,22 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 500),
     );
-    _scaleAnim = CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut);
+    _scaleAnim = CurvedAnimation(parent: _ctrl, curve: Curves.easeOut);
     _fadeAnim = CurvedAnimation(parent: _ctrl, curve: Curves.easeIn);
     _ctrl.forward();
 
-    // Auto-navigate to active session after 8 s.
-    _autoNav = Timer(const Duration(seconds: 8), () {
+    _autoNav = Timer(const Duration(seconds: 8), () async {
+      if (!mounted) return;
+      try {
+        final session = ref.read(activeSessionProvider).value;
+        if (session != null && session.status != SessionStatus.active) {
+          await ref
+              .read(activeSessionProvider.notifier)
+              .confirmParked(session.id);
+        }
+      } catch (_) {}
       if (mounted) context.pushReplacement('/active-session');
     });
   }
@@ -53,23 +62,21 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
     final sessionAsync = ref.watch(activeSessionProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       body: SafeArea(
         child: sessionAsync.when(
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+            child: CircularProgressIndicator(color: Pk.primary, strokeWidth: 2),
           ),
           error: (e, _) => Center(
             child: Text(e.toString(),
-                style: const TextStyle(color: Color(0xFFF87171))),
+                style: const TextStyle(color: Pk.dangerLt, fontSize: 13)),
           ),
           data: (session) {
             if (session == null) {
               return const Center(
-                child: Text(
-                  'No session found',
-                  style: TextStyle(color: Color(0xFF94A3B8)),
-                ),
+                child: Text('No session found',
+                    style: TextStyle(color: Pk.textSecondary)),
               );
             }
 
@@ -81,150 +88,131 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
                 slot?.zone?.facility?.name ??
                 'Parking Facility';
 
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Animated checkmark
-                  ScaleTransition(
-                    scale: _scaleAnim,
-                    child: Container(
-                      width: 90,
-                      height: 90,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF22C55E), Color(0xFF16A34A)],
+            return FadeTransition(
+              opacity: _fadeAnim,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // ─── Check icon ──────────────────────────────────
+                    ScaleTransition(
+                      scale: _scaleAnim,
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: Pk.success,
+                          borderRadius: Pk.r8,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF22C55E).withOpacity(0.35),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
+                        child: const Icon(
+                          Icons.check_rounded,
+                          color: Colors.white,
+                          size: 44,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      'Slot Assigned',
+                      style: TextStyle(
+                        color: Pk.textPrimary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      facilityName,
+                      style: const TextStyle(
+                          color: Pk.textSecondary, fontSize: 13),
+                    ),
+                    const SizedBox(height: 28),
+
+                    // ─── Slot badge ──────────────────────────────────
+                    SlotBadge(label: slotLabel, large: true),
+                    const SizedBox(height: 24),
+
+                    // ─── Info table ──────────────────────────────────
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Pk.surface,
+                        borderRadius: Pk.r8,
+                        border: Border.all(color: Pk.border),
+                      ),
+                      child: Column(
+                        children: [
+                          _Row('Zone', zoneName),
+                          const Divider(color: Pk.border, height: 1),
+                          if (floor != null)
+                            _Row('Floor', 'Level $floor'),
+                          if (floor != null)
+                            const Divider(color: Pk.border, height: 1),
+                          _Row('Status', 'Reserved'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // ─── Navigation note ─────────────────────────────
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: Pk.surface2,
+                        borderRadius: Pk.r6,
+                        border: Border.all(color: Pk.border2),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Icon(Icons.info_outline_rounded,
+                              color: Pk.textMuted, size: 16),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Proceed to your assigned slot and press '
+                              '"Confirm Parked" when you arrive.',
+                              style: TextStyle(
+                                  color: Pk.textSecondary,
+                                  fontSize: 13,
+                                  height: 1.5),
+                            ),
                           ),
                         ],
                       ),
-                      child: const Icon(Icons.check_rounded,
-                          color: Colors.white, size: 48),
                     ),
-                  ),
-                  const SizedBox(height: 28),
+                    const SizedBox(height: 24),
 
-                  FadeTransition(
-                    opacity: _fadeAnim,
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Slot Allocated!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          facilityName,
-                          style: const TextStyle(
-                            color: Color(0xFF94A3B8),
-                            fontSize: 15,
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-                        SlotBadge(
-                          code: slotLabel,
-                          zoneLabel: floor != null
-                              ? '$zoneName · Floor $floor'
-                              : zoneName,
-                        ),
-                        const SizedBox(height: 16),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1A1A2E),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color: const Color(0xFF6366F1)
-                                    .withOpacity(0.3)),
-                          ),
-                          child: Column(
-                            children: [
-                              _InfoRow(label: 'Zone', value: zoneName),
-                              if (floor != null) ...[
-                                const SizedBox(height: 12),
-                                _InfoRow(
-                                    label: 'Floor',
-                                    value: floor.toString()),
-                              ],
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Directions text
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color:
-                                const Color(0xFF6366F1).withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(
-                                color: const Color(0xFF6366F1)
-                                    .withOpacity(0.15)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Icon(Icons.info_outline_rounded,
-                                  color: Color(0xFF6366F1), size: 18),
-                              SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  'Proceed to your assigned slot. Follow the facility signs. '
-                                  'Map integration coming in Phase 8.',
-                                  style: TextStyle(
-                                    color: Color(0xFF94A3B8),
-                                    fontSize: 13,
-                                    height: 1.5,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-
-                        GradientButton(
-                          key: const Key('view_session_button'),
-                          label: 'Confirm Parked',
-                          icon: Icons.check_rounded,
-                          onPressed: () async {
-                            try {
-                              if (session.status != SessionStatus.active) {
-                                await ref
-                                    .read(activeSessionProvider.notifier)
-                                    .confirmParked(session.id);
-                              }
-                            } catch (_) {}
-                            if (context.mounted) {
-                              context.pushReplacement('/active-session');
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Auto-navigating in 8 seconds…',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.3),
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                    // ─── Confirm button ──────────────────────────────
+                    GradientButton(
+                      key: const Key('view_session_button'),
+                      label: 'Confirm Parked',
+                      icon: Icons.check_rounded,
+                      onPressed: () async {
+                        try {
+                          if (session.status != SessionStatus.active) {
+                            await ref
+                                .read(activeSessionProvider.notifier)
+                                .confirmParked(session.id);
+                          }
+                        } catch (_) {}
+                        if (context.mounted) {
+                          context.pushReplacement('/active-session');
+                        }
+                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    Text(
+                      'Auto-navigating in 8 seconds…',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.2),
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -234,36 +222,27 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
   }
 }
 
-class _InfoRow extends StatelessWidget {
+class _Row extends StatelessWidget {
   final String label;
   final String value;
-  final TextStyle? valueStyle;
-
-  const _InfoRow({
-    required this.label,
-    required this.value,
-    this.valueStyle,
-  });
+  const _Row(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: Color(0xFF64748B), fontSize: 14),
-        ),
-        Text(
-          value,
-          style: valueStyle ??
-              const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label,
+              style: const TextStyle(color: Pk.textSecondary, fontSize: 13)),
+          Text(value,
+              style: const TextStyle(
+                  color: Pk.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600)),
+        ],
+      ),
     );
   }
 }

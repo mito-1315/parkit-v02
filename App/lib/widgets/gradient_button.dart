@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import '../theme.dart';
 
+/// Flat, professional primary action button for Parkit.
+/// Kept the class name GradientButton for backwards compatibility,
+/// but it no longer uses gradients.
 class GradientButton extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
   final bool loading;
   final double? width;
+  final Color? color;
 
   const GradientButton({
     super.key,
@@ -14,6 +19,7 @@ class GradientButton extends StatefulWidget {
     this.icon,
     this.loading = false,
     this.width,
+    this.color,
   });
 
   @override
@@ -21,7 +27,7 @@ class GradientButton extends StatefulWidget {
 }
 
 class _GradientButtonState extends State<GradientButton>
-    with SingleTickerStateMixin {
+    with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _scale;
 
@@ -30,10 +36,10 @@ class _GradientButtonState extends State<GradientButton>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 80),
     );
-    _scale = Tween<double>(begin: 1.0, end: 0.96).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
+    _scale = Tween<double>(begin: 1.0, end: 0.97).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
     );
   }
 
@@ -45,59 +51,56 @@ class _GradientButtonState extends State<GradientButton>
 
   @override
   Widget build(BuildContext context) {
+    final enabled = widget.onPressed != null && !widget.loading;
+    final bgColor = !enabled
+        ? Pk.surface2
+        : (widget.color ?? Pk.primary);
+
     return GestureDetector(
-      onTapDown: (_) => _ctrl.forward(),
-      onTapUp: (_) => _ctrl.reverse(),
+      onTapDown: enabled ? (_) => _ctrl.forward() : null,
+      onTapUp: enabled ? (_) => _ctrl.reverse() : null,
       onTapCancel: () => _ctrl.reverse(),
-      onTap: widget.loading ? null : widget.onPressed,
+      onTap: enabled ? widget.onPressed : null,
       child: ScaleTransition(
         scale: _scale,
         child: Container(
           width: widget.width ?? double.infinity,
-          height: 52,
+          height: 50,
           decoration: BoxDecoration(
-            gradient: widget.onPressed == null && !widget.loading
-                ? const LinearGradient(
-                    colors: [Color(0xFF4B5563), Color(0xFF374151)],
-                  )
-                : const LinearGradient(
-                    colors: [Color(0xFF1959D1), Color(0xFF3E7BFA)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF1959D1).withOpacity(0.25),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            color: bgColor,
+            borderRadius: Pk.r6,
+            border: enabled
+                ? null
+                : Border.all(color: Pk.border),
           ),
           child: Center(
             child: widget.loading
                 ? const SizedBox(
-                    width: 22,
-                    height: 22,
+                    width: 20,
+                    height: 20,
                     child: CircularProgressIndicator(
                       color: Colors.white,
-                      strokeWidth: 2.5,
+                      strokeWidth: 2,
                     ),
                   )
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (widget.icon != null) ...[
-                        Icon(widget.icon, color: Colors.white, size: 20),
+                        Icon(widget.icon,
+                            color: enabled
+                                ? Colors.white
+                                : Pk.textMuted,
+                            size: 18),
                         const SizedBox(width: 8),
                       ],
                       Text(
                         widget.label,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.3,
+                        style: TextStyle(
+                          color: enabled ? Colors.white : Pk.textMuted,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.2,
                         ),
                       ),
                     ],

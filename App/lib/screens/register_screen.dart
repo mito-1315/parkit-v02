@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -38,14 +39,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           phone: _phoneCtrl.text.trim().isEmpty ? null : _phoneCtrl.text.trim(),
         );
     if (!mounted) return;
-    final state = ref.read(authProvider);
-    state.whenOrNull(
+    ref.read(authProvider).whenOrNull(
       error: (e, _) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString().replaceFirst('ApiException', '').trim()),
-            backgroundColor: const Color(0xFFF87171),
-            behavior: SnackBarBehavior.floating,
+            backgroundColor: Pk.danger,
           ),
         );
       },
@@ -58,12 +57,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final loading = authState is AsyncLoading;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Pk.bg,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF94A3B8)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+          color: Pk.textSecondary,
           onPressed: () => context.pop(),
         ),
         elevation: 0,
@@ -76,52 +75,48 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 8),
-                ShaderMask(
-                  shaderCallback: (b) => const LinearGradient(
-                    colors: [Color(0xFF60A5FA), Color(0xFFA78BFA)],
-                  ).createShader(b),
-                  child: const Text(
-                    'Create Account',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w900,
-                    ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Create Account',
+                  style: TextStyle(
+                    color: Pk.textPrimary,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 const Text(
-                  'Join Parker and park smarter',
-                  style: TextStyle(color: Color(0xFF64748B), fontSize: 14),
+                  'Join Parkit and park smarter',
+                  style: TextStyle(color: Pk.textSecondary, fontSize: 13),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 28),
 
-                _buildLabel('Full Name'),
+                _label('Full Name'),
                 const SizedBox(height: 6),
                 TextFormField(
                   key: const Key('register_name_field'),
                   controller: _nameCtrl,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: _inputDeco(
+                  style: const TextStyle(color: Pk.textPrimary, fontSize: 14),
+                  decoration: pkInputDecoration(
                     hint: 'John Doe',
                     icon: Icons.person_outline_rounded,
                   ),
                   validator: (v) =>
                       (v == null || v.trim().isEmpty) ? 'Name is required' : null,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
 
-                _buildLabel('Email'),
+                _label('Email'),
                 const SizedBox(height: 6),
                 TextFormField(
                   key: const Key('register_email_field'),
                   controller: _emailCtrl,
                   keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: _inputDeco(
+                  style: const TextStyle(color: Pk.textPrimary, fontSize: 14),
+                  decoration: pkInputDecoration(
                     hint: 'you@example.com',
-                    icon: Icons.email_outlined,
+                    icon: Icons.mail_outline_rounded,
                   ),
                   validator: (v) {
                     if (v == null || v.trim().isEmpty) return 'Email is required';
@@ -129,25 +124,25 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
 
-                _buildLabel('Password'),
+                _label('Password'),
                 const SizedBox(height: 6),
                 TextFormField(
                   key: const Key('register_password_field'),
                   controller: _passCtrl,
                   obscureText: _obscure,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: _inputDeco(
+                  style: const TextStyle(color: Pk.textPrimary, fontSize: 14),
+                  decoration: pkInputDecoration(
                     hint: 'Min. 6 characters',
                     icon: Icons.lock_outline_rounded,
                     suffix: IconButton(
                       icon: Icon(
                         _obscure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: const Color(0xFF64748B),
-                        size: 20,
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                        color: Pk.textMuted,
+                        size: 18,
                       ),
                       onPressed: () => setState(() => _obscure = !_obscure),
                     ),
@@ -158,26 +153,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
 
-                _buildLabel('Phone (optional)'),
+                _label('Phone (optional)'),
                 const SizedBox(height: 6),
                 TextFormField(
                   key: const Key('register_phone_field'),
                   controller: _phoneCtrl,
                   keyboardType: TextInputType.phone,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: _inputDeco(
+                  style: const TextStyle(color: Pk.textPrimary, fontSize: 14),
+                  decoration: pkInputDecoration(
                     hint: '+1 555 123 4567',
                     icon: Icons.phone_outlined,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 28),
 
                 GradientButton(
                   key: const Key('register_submit_button'),
                   label: 'Create Account',
-                  icon: Icons.check_circle_outline_rounded,
+                  icon: Icons.check_rounded,
                   loading: loading,
                   onPressed: loading ? null : _submit,
                 ),
@@ -186,15 +181,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () => context.pop(),
-                    child: const Text.rich(
+                    child: Text.rich(
                       TextSpan(
                         text: 'Already have an account? ',
-                        style: TextStyle(color: Color(0xFF64748B)),
+                        style:
+                            const TextStyle(color: Pk.textSecondary, fontSize: 13),
                         children: [
                           TextSpan(
                             text: 'Sign In',
                             style: TextStyle(
-                              color: Color(0xFF6366F1),
+                              color: Pk.primary,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -203,7 +199,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
               ],
             ),
           ),
@@ -212,48 +208,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 
-  Widget _buildLabel(String text) => Text(
+  Widget _label(String text) => Text(
         text,
         style: const TextStyle(
-          color: Color(0xFF94A3B8),
-          fontSize: 13,
+          color: Pk.textSecondary,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
+          letterSpacing: 0.4,
         ),
       );
-
-  InputDecoration _inputDeco({
-    required String hint,
-    required IconData icon,
-    Widget? suffix,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: const TextStyle(color: Color(0xFF475569)),
-      prefixIcon: Icon(icon, color: const Color(0xFF6366F1), size: 20),
-      suffixIcon: suffix,
-      filled: true,
-      fillColor: const Color(0xFF1A1A2E),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFF6366F1), width: 1.5),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF87171), width: 1.5),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFF87171), width: 1.5),
-      ),
-    );
-  }
 }

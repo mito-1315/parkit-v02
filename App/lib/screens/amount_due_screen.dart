@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/session_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class AmountDueScreen extends ConsumerWidget {
@@ -23,43 +24,87 @@ class AmountDueScreen extends ConsumerWidget {
     final currency = session?.currency ?? 'INR';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: const Text('Amount Due', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        backgroundColor: Pk.bg,
+        title: const Text('Session Complete'),
+        automaticallyImplyLeading: false,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const SizedBox(height: 24),
-            const Text('AMOUNT DUE', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 12, letterSpacing: 1.4)),
+            const SizedBox(height: 32),
+
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: Pk.success,
+                borderRadius: Pk.r8,
+              ),
+              child: const Icon(Icons.check_rounded,
+                  color: Colors.white, size: 38),
+            ),
+            const SizedBox(height: 20),
+
+            const Text(
+              'AMOUNT DUE',
+              style: TextStyle(
+                color: Pk.textMuted,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.2,
+              ),
+            ),
             const SizedBox(height: 8),
             Text(
               '$currency ${fee.toStringAsFixed(2)}',
               key: const Key('amount_due_value'),
               style: const TextStyle(
-                color: Colors.white,
+                color: Pk.textPrimary,
                 fontSize: 48,
                 fontWeight: FontWeight.w900,
                 fontFamily: 'monospace',
+                letterSpacing: 2,
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Duration ${_formatDuration(session?.durationMinutes, session?.duration ?? Duration.zero)}',
+              'Duration: ${_formatDuration(session?.durationMinutes, session?.duration ?? Duration.zero)}',
               key: const Key('amount_due_duration'),
-              style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14),
+              style: const TextStyle(color: Pk.textSecondary, fontSize: 14),
             ),
             const SizedBox(height: 12),
-            Text(
-              session?.paymentStatus == 'PENDING' ? 'Payment status: PENDING' : (session?.paymentStatus ?? 'PENDING'),
-              style: const TextStyle(color: Color(0xFFFBBF24), fontSize: 13),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Pk.warning.withOpacity(0.12),
+                borderRadius: Pk.r6,
+                border: Border.all(color: Pk.warning.withOpacity(0.3)),
+              ),
+              child: Text(
+                session?.paymentStatus == 'PENDING'
+                    ? 'Payment Pending'
+                    : (session?.paymentStatus ?? 'Pending'),
+                style: TextStyle(
+                    color: Pk.warning,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600),
+              ),
             ),
+
             const Spacer(),
+
             GradientButton(
               key: const Key('pay_later_button'),
-              label: 'Pay Later',
+              label: 'Pay at Counter — Done',
+              icon: Icons.home_outlined,
               onPressed: () {
                 ref.invalidate(sessionHistoryProvider);
                 context.go('/home');

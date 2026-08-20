@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/session_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class ConfirmVehicleScreen extends ConsumerStatefulWidget {
@@ -10,10 +11,12 @@ class ConfirmVehicleScreen extends ConsumerStatefulWidget {
   const ConfirmVehicleScreen({super.key, required this.gateId});
 
   @override
-  ConsumerState<ConfirmVehicleScreen> createState() => _ConfirmVehicleScreenState();
+  ConsumerState<ConfirmVehicleScreen> createState() =>
+      _ConfirmVehicleScreenState();
 }
 
-class _ConfirmVehicleScreenState extends ConsumerState<ConfirmVehicleScreen> {
+class _ConfirmVehicleScreenState
+    extends ConsumerState<ConfirmVehicleScreen> {
   late final TextEditingController _plateCtrl;
   bool _loading = false;
   String? _error;
@@ -57,47 +60,85 @@ class _ConfirmVehicleScreenState extends ConsumerState<ConfirmVehicleScreen> {
     final lowConfidence = (detected?.confidence ?? 1) < 0.8;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: const Text('Confirm Vehicle', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        backgroundColor: Pk.bg,
+        title: const Text('Confirm Vehicle'),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Detected plate', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 13)),
+            const SizedBox(height: 8),
+            const Text(
+              'DETECTED PLATE',
+              style: TextStyle(
+                color: Pk.textMuted,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.0,
+              ),
+            ),
             const SizedBox(height: 12),
             TextField(
               key: const Key('plate_field'),
               controller: _plateCtrl,
               style: const TextStyle(
-                color: Colors.white,
-                fontSize: 32,
+                color: Pk.textPrimary,
+                fontSize: 28,
                 fontWeight: FontWeight.w800,
                 fontFamily: 'monospace',
-                letterSpacing: 2,
+                letterSpacing: 3,
               ),
               decoration: InputDecoration(
-                suffixText: 'Edit',
-                suffixStyle: const TextStyle(color: Color(0xFF6366F1), fontSize: 13),
+                suffixText: 'edit',
+                suffixStyle: TextStyle(
+                    color: Pk.primary, fontSize: 12),
                 filled: true,
-                fillColor: const Color(0xFF1A1A2E),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                fillColor: Pk.surface,
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 16),
+                border: OutlineInputBorder(
+                  borderRadius: Pk.r6,
+                  borderSide: const BorderSide(color: Pk.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: Pk.r6,
+                  borderSide: const BorderSide(color: Pk.border),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: Pk.r6,
+                  borderSide:
+                      const BorderSide(color: Pk.primary, width: 1.5),
+                ),
               ),
             ),
             if (lowConfidence) ...[
               const SizedBox(height: 8),
-              const Text(
-                'Low confidence, please check',
-                key: Key('low_confidence_note'),
-                style: TextStyle(color: Color(0xFFFBBF24), fontSize: 12),
+              const Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded,
+                      color: Color(0xFFFBBF24), size: 14),
+                  SizedBox(width: 6),
+                  Text(
+                    'Low confidence — please verify',
+                    key: Key('low_confidence_note'),
+                    style: TextStyle(
+                        color: Color(0xFFFBBF24), fontSize: 12),
+                  ),
+                ],
               ),
             ],
             if (_error != null) ...[
               const SizedBox(height: 12),
-              Text(_error!, style: const TextStyle(color: Color(0xFFF87171))),
+              Text(_error!,
+                  style:
+                      const TextStyle(color: Pk.dangerLt, fontSize: 13)),
             ],
             const Spacer(),
             GradientButton(

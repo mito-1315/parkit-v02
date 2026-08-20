@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import '../theme.dart';
 
 class SlotBadge extends StatelessWidget {
-  final String code;
+  final String label;
   final String? zoneLabel;
-  final double size;
+  final bool large;
 
   const SlotBadge({
     super.key,
-    required this.code,
+    required this.label,
     this.zoneLabel,
-    this.size = 120,
+    this.large = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final size = large ? 110.0 : 80.0;
     return Column(
       children: [
         Container(
@@ -23,18 +24,11 @@ class SlotBadge extends StatelessWidget {
           height: size,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.brand,
-            borderRadius: BorderRadius.circular(18),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.brand.withOpacity(0.28),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
+            color: Pk.primary,
+            borderRadius: Pk.r8,
           ),
           child: Text(
-            code,
+            label,
             style: TextStyle(
               color: Colors.white,
               fontSize: size * 0.28,
@@ -48,7 +42,7 @@ class SlotBadge extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             zoneLabel!,
-            style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+            style: const TextStyle(color: Pk.textSecondary, fontSize: 13),
           ),
         ],
       ],

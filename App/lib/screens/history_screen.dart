@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../models/parking_session.dart';
 import '../providers/session_provider.dart';
+import '../theme.dart';
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
@@ -20,53 +21,41 @@ class HistoryScreen extends ConsumerWidget {
     final historyAsync = ref.watch(sessionHistoryProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: ShaderMask(
-          shaderCallback: (b) => const LinearGradient(
-            colors: [Color(0xFF60A5FA), Color(0xFFA78BFA)],
-          ).createShader(b),
-          child: const Text(
-            'Parking History',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 20,
-            ),
-          ),
-        ),
+        backgroundColor: Pk.bg,
+        title: const Text('History'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF94A3B8)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
-        elevation: 0,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       body: historyAsync.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+          child: CircularProgressIndicator(color: Pk.primary, strokeWidth: 2),
         ),
         error: (e, _) => Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Text(
-              'Failed to load history\n$e',
-              style: const TextStyle(color: Color(0xFFF87171)),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          child: Text('Failed to load history\n$e',
+              style: const TextStyle(color: Pk.dangerLt, fontSize: 13),
+              textAlign: TextAlign.center),
         ),
         data: (sessions) => sessions.isEmpty
-            ? _EmptyHistory()
+            ? const _EmptyHistory()
             : RefreshIndicator(
-                color: const Color(0xFF6366F1),
+                color: Pk.primary,
                 onRefresh: () => ref.refresh(sessionHistoryProvider.future),
-                child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+                child: ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
                   itemCount: sessions.length,
-                  itemBuilder: (_, i) =>
-                      _HistoryCard(session: sessions[i], formatDuration: _formatDuration),
+                  separatorBuilder: (_, __) => const SizedBox(height: 1),
+                  itemBuilder: (_, i) => _HistoryRow(
+                    session: sessions[i],
+                    formatDuration: _formatDuration,
+                  ),
                 ),
               ),
       ),
@@ -75,57 +64,41 @@ class HistoryScreen extends ConsumerWidget {
 }
 
 class _EmptyHistory extends StatelessWidget {
+  const _EmptyHistory();
+
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.history_rounded,
-                color: Color(0xFF6366F1), size: 36),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'No history yet',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Completed parking sessions will appear here',
-            style: TextStyle(color: Color(0xFF64748B), fontSize: 13),
-          ),
+          Icon(Icons.history_rounded, color: Pk.textMuted, size: 44),
+          SizedBox(height: 14),
+          Text('No history yet',
+              style: TextStyle(
+                  color: Pk.textPrimary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700)),
+          SizedBox(height: 6),
+          Text('Completed sessions appear here',
+              style: TextStyle(color: Pk.textSecondary, fontSize: 13)),
         ],
       ),
     );
   }
 }
 
-class _HistoryCard extends StatelessWidget {
+class _HistoryRow extends StatelessWidget {
   final ParkingSession session;
   final String Function(Duration) formatDuration;
-
-  const _HistoryCard({
-    required this.session,
-    required this.formatDuration,
-  });
+  const _HistoryRow(
+      {required this.session, required this.formatDuration});
 
   @override
   Widget build(BuildContext context) {
-    final facilityName = session.facilityName ??
-        session.slot?.zone?.facility?.name ??
-        'Facility';
+    final facilityName =
+        session.facilityName ?? session.slot?.zone?.facility?.name ?? 'Facility';
     final slotLabel = session.slot?.label ?? '—';
-    final zoneName = session.slot?.zone?.name ?? '';
     final date = session.entryTime != null
         ? DateFormat('dd MMM yyyy').format(session.entryTime!.toLocal())
         : '—';
@@ -135,86 +108,55 @@ class _HistoryCard extends StatelessWidget {
 
     return Container(
       key: ValueKey(session.id),
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Pk.border)),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left: icon
           Container(
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
+              color: Pk.primary.withOpacity(0.1),
+              borderRadius: Pk.r6,
             ),
             child: const Icon(Icons.local_parking_rounded,
-                color: Color(0xFF6366F1), size: 22),
+                color: Pk.primary, size: 20),
           ),
           const SizedBox(width: 14),
-          // Center: info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(facilityName,
+                    style: const TextStyle(
+                        color: Pk.textPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14)),
+                const SizedBox(height: 2),
                 Text(
-                  facilityName,
+                  'Slot $slotLabel · $date $time',
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      'Slot $slotLabel',
-                      style: const TextStyle(
-                          color: Color(0xFF94A3B8), fontSize: 13),
-                    ),
-                    if (zoneName.isNotEmpty) ...[
-                      const Text(
-                        ' · ',
-                        style: TextStyle(color: Color(0xFF475569)),
-                      ),
-                      Text(
-                        zoneName,
-                        style: const TextStyle(
-                            color: Color(0xFF64748B), fontSize: 12),
-                      ),
-                    ],
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '$date · $time',
-                  style: const TextStyle(
-                      color: Color(0xFF475569), fontSize: 12),
+                      color: Pk.textSecondary, fontSize: 12),
                 ),
               ],
             ),
           ),
-          // Right: duration
           Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF94A3B8).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
+              color: Pk.surface2,
+              borderRadius: Pk.r4,
+              border: Border.all(color: Pk.border),
             ),
             child: Text(
               formatDuration(session.duration),
               style: const TextStyle(
-                color: Color(0xFF94A3B8),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
+                  color: Pk.textSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500),
             ),
           ),
         ],

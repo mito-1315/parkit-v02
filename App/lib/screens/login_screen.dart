@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -32,14 +33,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           password: _passCtrl.text,
         );
     if (!mounted) return;
-    final state = ref.read(authProvider);
-    state.whenOrNull(
+    ref.read(authProvider).whenOrNull(
       error: (e, _) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString().replaceFirst('ApiException', '').trim()),
-            backgroundColor: const Color(0xFFF87171),
-            behavior: SnackBarBehavior.floating,
+            backgroundColor: Pk.danger,
           ),
         );
       },
@@ -52,7 +51,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final loading = authState is AsyncLoading;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -62,43 +61,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Header
+                  // ─── Brand ───────────────────────────────────────────
                   Center(
                     child: Column(
                       children: [
                         Container(
-                          width: 72,
-                          height: 72,
+                          width: 64,
+                          height: 64,
                           decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
+                            color: Pk.primary,
+                            borderRadius: Pk.r8,
                           ),
-                          child: const Icon(Icons.local_parking_rounded,
-                              color: Colors.white, size: 38),
-                        ),
-                        const SizedBox(height: 20),
-                        ShaderMask(
-                          shaderCallback: (b) => const LinearGradient(
-                            colors: [Color(0xFF60A5FA), Color(0xFFA78BFA)],
-                          ).createShader(b),
-                          child: const Text(
-                            'Parker',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 36,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: -0.5,
-                            ),
+                          child: const Icon(
+                            Icons.local_parking_rounded,
+                            color: Colors.white,
+                            size: 34,
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 18),
                         const Text(
-                          'Smart Parking at your fingertips',
+                          'Parkit',
                           style: TextStyle(
-                            color: Color(0xFF64748B),
-                            fontSize: 14,
+                            color: Pk.textPrimary,
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Smart parking at your fingertips',
+                          style: TextStyle(
+                            color: Pk.textSecondary,
+                            fontSize: 13,
                           ),
                         ),
                       ],
@@ -106,59 +101,54 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 40),
 
-                  // Email field
-                  _buildLabel('Email'),
+                  // ─── Email ───────────────────────────────────────────
+                  _label('Email'),
                   const SizedBox(height: 6),
                   TextFormField(
                     key: const Key('login_email_field'),
                     controller: _emailCtrl,
                     keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: _inputDecoration(
+                    style: const TextStyle(color: Pk.textPrimary, fontSize: 14),
+                    decoration: pkInputDecoration(
                       hint: 'you@example.com',
-                      icon: Icons.email_outlined,
+                      icon: Icons.mail_outline_rounded,
                     ),
                     validator: (v) {
-                      if (v == null || v.trim().isEmpty) {
-                        return 'Email is required';
-                      }
+                      if (v == null || v.trim().isEmpty) return 'Email is required';
                       if (!v.contains('@')) return 'Enter a valid email';
                       return null;
                     },
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 16),
 
-                  // Password field
-                  _buildLabel('Password'),
+                  // ─── Password ────────────────────────────────────────
+                  _label('Password'),
                   const SizedBox(height: 6),
                   TextFormField(
                     key: const Key('login_password_field'),
                     controller: _passCtrl,
                     obscureText: _obscure,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: _inputDecoration(
+                    style: const TextStyle(color: Pk.textPrimary, fontSize: 14),
+                    decoration: pkInputDecoration(
                       hint: '••••••••',
                       icon: Icons.lock_outline_rounded,
                       suffix: IconButton(
                         icon: Icon(
                           _obscure
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: const Color(0xFF64748B),
-                          size: 20,
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: Pk.textMuted,
+                          size: 18,
                         ),
-                        onPressed: () =>
-                            setState(() => _obscure = !_obscure),
+                        onPressed: () => setState(() => _obscure = !_obscure),
                       ),
                     ),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Password is required';
-                      return null;
-                    },
+                    validator: (v) =>
+                        (v == null || v.isEmpty) ? 'Password is required' : null,
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
 
-                  // Login button
+                  // ─── Submit ──────────────────────────────────────────
                   GradientButton(
                     key: const Key('login_submit_button'),
                     label: 'Sign In',
@@ -166,21 +156,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     loading: loading,
                     onPressed: loading ? null : _submit,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
-                  // Register link
+                  // ─── Register link ───────────────────────────────────
                   Center(
                     child: GestureDetector(
                       onTap: () => context.push('/register'),
-                      child: const Text.rich(
+                      child: Text.rich(
                         TextSpan(
                           text: "Don't have an account? ",
-                          style: TextStyle(color: Color(0xFF64748B)),
+                          style: const TextStyle(
+                              color: Pk.textSecondary, fontSize: 13),
                           children: [
                             TextSpan(
                               text: 'Register',
                               style: TextStyle(
-                                color: Color(0xFF6366F1),
+                                color: Pk.primary,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -199,52 +190,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  Widget _buildLabel(String text) => Text(
+  Widget _label(String text) => Text(
         text,
         style: const TextStyle(
-          color: Color(0xFF94A3B8),
-          fontSize: 13,
+          color: Pk.textSecondary,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
+          letterSpacing: 0.4,
         ),
       );
-
-  InputDecoration _inputDecoration({
-    required String hint,
-    required IconData icon,
-    Widget? suffix,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: const TextStyle(color: Color(0xFF475569)),
-      prefixIcon: Icon(icon, color: const Color(0xFF6366F1), size: 20),
-      suffixIcon: suffix,
-      filled: true,
-      fillColor: const Color(0xFF1A1A2E),
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: Color(0xFF6366F1), width: 1.5),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: Color(0xFFF87171), width: 1.5),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide:
-            const BorderSide(color: Color(0xFFF87171), width: 1.5),
-      ),
-    );
-  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/vehicle.dart';
+import '../theme.dart';
 
 class VehicleTile extends StatelessWidget {
   final Vehicle vehicle;
@@ -16,75 +17,57 @@ class VehicleTile extends StatelessWidget {
       case 'BUS':
         return Icons.local_shipping_rounded;
       default:
-        return Icons.directions_car_rounded;
+        return Icons.directions_car_outlined;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Pk.border)),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: const Color(0xFF6366F1).withOpacity(0.12),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              _typeIcon(vehicle.vehicleType),
-              color: const Color(0xFF6366F1),
-              size: 22,
-            ),
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Pk.primary.withOpacity(0.1),
+            borderRadius: Pk.r6,
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  vehicle.licensePlate,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 15,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  [
-                    if (vehicle.make != null) vehicle.make!,
-                    if (vehicle.model != null) vehicle.model!,
-                    vehicle.vehicleType,
-                    if (vehicle.color != null) '· ${vehicle.color}',
-                  ].join(' '),
-                  style: const TextStyle(
-                    color: Color(0xFF64748B),
-                    fontSize: 12,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
+          child: Icon(_typeIcon(vehicle.vehicleType),
+              color: Pk.primary, size: 20),
+        ),
+        title: Text(
+          vehicle.licensePlate,
+          style: const TextStyle(
+            color: Pk.textPrimary,
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
+            letterSpacing: 1.0,
           ),
-          if (onDelete != null)
-            IconButton(
-              icon: const Icon(Icons.delete_outline_rounded,
-                  color: Color(0xFFF87171), size: 20),
-              onPressed: onDelete,
-              tooltip: 'Remove vehicle',
-            ),
-        ],
+        ),
+        subtitle: Text(
+          [
+            if (vehicle.make != null) vehicle.make!,
+            if (vehicle.model != null) vehicle.model!,
+            vehicle.vehicleType,
+            if (vehicle.color != null) '· ${vehicle.color}',
+          ].join(' '),
+          style: const TextStyle(color: Pk.textMuted, fontSize: 12),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        trailing: onDelete != null
+            ? IconButton(
+                icon: const Icon(Icons.delete_outline_rounded,
+                    color: Pk.dangerLt, size: 20),
+                onPressed: onDelete,
+                tooltip: 'Remove vehicle',
+              )
+            : null,
       ),
     );
   }

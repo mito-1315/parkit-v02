@@ -43,7 +43,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.bgBase,
+      backgroundColor: Pk.bg,
       appBar: AppBar(
         title: const Text('Profile'),
       ),
@@ -92,7 +92,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               await ref.read(authProvider.notifier).logout();
               if (context.mounted) context.go('/login');
             },
-            child: const Text('Logout', style: TextStyle(color: AppColors.occupied)),
+            child: const Text('Logout', style: TextStyle(color: Pk.dangerLt)),
           ),
         ],
       ),

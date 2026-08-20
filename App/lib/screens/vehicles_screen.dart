@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/vehicle.dart';
 import '../providers/vehicle_provider.dart';
+import '../theme.dart';
 import '../widgets/gradient_button.dart';
 import '../widgets/vehicle_tile.dart';
 
@@ -14,43 +15,33 @@ class VehiclesScreen extends ConsumerWidget {
     final vehicleState = ref.watch(vehicleNotifierProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0F),
+      backgroundColor: Pk.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0F),
-        title: ShaderMask(
-          shaderCallback: (b) => const LinearGradient(
-            colors: [Color(0xFF60A5FA), Color(0xFFA78BFA)],
-          ).createShader(b),
-          child: const Text(
-            'My Vehicles',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 20,
-            ),
-          ),
-        ),
+        backgroundColor: Pk.bg,
+        title: const Text('My Vehicles'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF94A3B8)),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         elevation: 0,
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(color: Pk.border, height: 1),
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         key: const Key('add_vehicle_fab'),
-        backgroundColor: const Color(0xFF6366F1),
+        backgroundColor: Pk.primary,
         icon: const Icon(Icons.add_rounded, color: Colors.white),
         label: const Text(
           'Add Vehicle',
-          style: TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w700),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         onPressed: () => _showAddSheet(context, ref),
       ),
       body: vehicleState.when(
         loading: () => const Center(
-          child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+          child: CircularProgressIndicator(color: Pk.primary, strokeWidth: 2),
         ),
         error: (e, _) => Center(
           child: Text(
