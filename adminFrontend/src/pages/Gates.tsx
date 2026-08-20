@@ -133,7 +133,7 @@ interface GateCardProps {
 }
 
 const GateCard: React.FC<GateCardProps> = ({ gate, accent, icon }) => {
-  const payload = JSON.stringify({ gateId: gate.id });
+  const payload = JSON.stringify({ gateId: gate.id, type: gate.type });
 
   const handlePrint = () => {
     const w = window.open('', '_blank');

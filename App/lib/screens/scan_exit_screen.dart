@@ -27,18 +27,26 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
     super.dispose();
   }
 
-  int? _parseGateId(String raw) {
+  (int?, String?) _parseQr(String raw) {
     final asInt = int.tryParse(raw.trim());
-    if (asInt != null) return asInt;
+    if (asInt != null) return (asInt, null);
     try {
       final decoded = jsonDecode(raw.trim()) as Map<String, dynamic>;
-      return (decoded['gateId'] ?? decoded['gate_id'] ?? decoded['id']) as int?;
+      final id = (decoded['gateId'] ?? decoded['gate_id'] ?? decoded['id']) as int?;
+      final type = (decoded['type'] as String?)?.toUpperCase();
+      return (id, type);
     } catch (_) {
-      return null;
+      return (null, null);
     }
   }
 
-  Future<void> _exit(int gateId) async {
+  Future<void> _exit(int gateId, {String? qrType}) async {
+    // Reject if QR belongs to an entry gate.
+    if (qrType != null && qrType != 'EXIT') {
+      setState(() => _error =
+          'This is an entry gate QR. Please scan an EXIT gate QR code.');
+      return;
+    }
     if (_busy) return;
     setState(() {
       _busy = true;
@@ -81,7 +89,8 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
                   onDetect: (capture) {
                     final raw = capture.barcodes.firstOrNull?.rawValue;
                     if (raw == null) return;
-                    _exit(_parseGateId(raw) ?? 2);
+                    final (id, type) = _parseQr(raw);
+                    _exit(id ?? 2, qrType: type);
                   },
                 ),
                 Center(
@@ -130,7 +139,7 @@ class _ScanExitScreenState extends ConsumerState<ScanExitScreen> {
                   label: 'Simulate Exit Scan',
                   icon: Icons.qr_code_2_rounded,
                   loading: _busy,
-                  onPressed: _busy ? null : () => _exit(2),
+                  onPressed: _busy ? null : () => _exit(2, qrType: 'EXIT'),
                 ),
               ],
             ),

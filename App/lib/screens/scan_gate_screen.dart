@@ -29,19 +29,35 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
     super.dispose();
   }
 
-  int? _parseGateId(String raw) {
+  /// Returns `(gateId, type)`. type is 'ENTRY', 'EXIT', or null (unknown).
+  (int?, String?) _parseQr(String raw) {
     final asInt = int.tryParse(raw.trim());
-    if (asInt != null) return asInt;
+    if (asInt != null) return (asInt, null);
     try {
       final decoded = jsonDecode(raw.trim()) as Map<String, dynamic>;
-      return (decoded['gateId'] ?? decoded['gate_id'] ?? decoded['id']) as int?;
+      final id = (decoded['gateId'] ?? decoded['gate_id'] ?? decoded['id']) as int?;
+      final type = (decoded['type'] as String?)?.toUpperCase();
+      return (id, type);
     } catch (_) {
-      return null;
+      return (null, null);
     }
   }
 
-  Future<void> _startFlow({int? gateId}) async {
+  Future<void> _startFlow({int? gateId, String? qrType}) async {
     if (gateId == null || _scanned || _loading) return;
+
+    // Validate gate type if the QR includes it.
+    if (qrType != null) {
+      final expected = widget.isExit ? 'EXIT' : 'ENTRY';
+      if (qrType != expected) {
+        setState(() {
+          _errorMsg = widget.isExit
+              ? 'This is an entry gate QR. Please scan an EXIT gate QR code.'
+              : 'This is an exit gate QR. Please scan an ENTRY gate QR code.';
+        });
+        return;
+      }
+    }
     try {
       setState(() {
         _scanned = true;
@@ -79,7 +95,8 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
     if (_scanned || _loading) return;
     final barcode = capture.barcodes.firstOrNull;
     if (barcode?.rawValue == null) return;
-    await _startFlow(gateId: _parseGateId(barcode!.rawValue!) ?? 1);
+    final (id, type) = _parseQr(barcode!.rawValue!);
+    await _startFlow(gateId: id ?? 1, qrType: type);
   }
 
   @override
@@ -157,8 +174,10 @@ class _ScanGateScreenState extends ConsumerState<ScanGateScreen> {
                   key: const Key('simulate_scan_button'),
                   label: 'Simulate Scan',
                   icon: Icons.qr_code_2_rounded,
-                  onPressed: () =>
-                      _startFlow(gateId: widget.isExit ? 2 : 1),
+                  onPressed: () => _startFlow(
+                    gateId: widget.isExit ? 2 : 1,
+                    qrType: widget.isExit ? 'EXIT' : 'ENTRY',
+                  ),
                 ),
               ],
             ),

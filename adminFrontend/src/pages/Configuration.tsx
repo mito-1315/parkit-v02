@@ -698,7 +698,7 @@ function GateSection({
       <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         {gates.map((g: any) => {
           const id = gateIdOf(g)!;
-          const payload = g.qr_code || JSON.stringify({ gateId: id });
+          const payload = JSON.stringify({ gateId: id, type: gateTypeOf(g) });
           return (
             <div key={id} className="rounded-lg border border-border-hairline bg-bg-surface p-4 text-center">
               <p className="font-medium text-text-primary">{g.name}</p>

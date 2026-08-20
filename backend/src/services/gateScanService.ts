@@ -12,6 +12,7 @@ export class GateScanService {
       include: { camera: true },
     });
     if (!gate) throw new AppError(HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Gate not found');
+    if (gate.gate_type !== 'ENTRY') throw new AppError(HTTP_STATUS.BAD_REQUEST, 'WRONG_GATE_TYPE', 'This is an exit gate. Please scan an entry gate QR code.');
 
     const reading = await getAiAdapter().detectPlateAtGate(gateId, forcePlate);
     if (!reading) {
@@ -45,6 +46,7 @@ export class GateScanService {
   ) {
     const gate = await prisma.gate.findUnique({ where: { gate_id: gateId } });
     if (!gate) throw new AppError(HTTP_STATUS.NOT_FOUND, 'NOT_FOUND', 'Gate not found');
+    if (gate.gate_type !== 'EXIT') throw new AppError(HTTP_STATUS.BAD_REQUEST, 'WRONG_GATE_TYPE', 'This is an entry gate. Please scan an exit gate QR code.');
 
     const reading = await getAiAdapter().detectPlateAtGate(gateId, opts.forcePlate);
 
