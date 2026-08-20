@@ -1,0 +1,3 @@
+// ai-mock/ — the fake AI adapter (Phase 3)
+// Nothing outside this folder is allowed to depend on a concrete adapter,
+// only on aiAdapter.interface.ts

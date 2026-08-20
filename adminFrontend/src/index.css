@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg-base: #12151a;
+  --color-bg-surface: #1b1f27;
+  --color-bg-elevated: #232833;
+  --color-border-hairline: #2a2f3a;
+  --color-text-primary: #e8eaed;
+  --color-text-muted: #8b92a0;
+  --color-signal-available: #35c57a;
+  --color-signal-occupied: #e5484d;
+  --color-signal-reserved: #f2a93b;
+  --color-signal-offline: #5b6472;
+  --color-accent-brand: #3e7bfa;
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent-brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes slot-glow {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  100% {
+    box-shadow: 0 0 18px 2px currentColor;
+  }
+}
+
+.live-pulse {
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+.slot-pulse {
+  animation: slot-glow 200ms ease-out;
+}

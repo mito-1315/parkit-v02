@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect width="800" height="450" fill="#12151a"/>
+  <rect x="30" y="50" width="740" height="360" rx="8" fill="#1b1f27" stroke="#2a2f3a"/>
+  <text x="400" y="36" text-anchor="middle" fill="#8b92a0" font-family="sans-serif" font-size="14">Empty lot  Camera B (placeholder)</text>
+  <g fill="none" stroke="#35c57a" stroke-width="2" opacity="0.4">
+    <rect x="60" y="80" width="150" height="80"/>
+    <rect x="230" y="80" width="150" height="80"/>
+    <rect x="400" y="80" width="150" height="80"/>
+    <rect x="570" y="80" width="150" height="80"/>
+    <rect x="60" y="200" width="150" height="80"/>
+    <rect x="230" y="200" width="150" height="80"/>
+    <rect x="400" y="200" width="150" height="80"/>
+    <rect x="570" y="200" width="150" height="80"/>
+    <rect x="60" y="320" width="150" height="70"/>
+    <rect x="230" y="320" width="150" height="70"/>
+    <rect x="400" y="320" width="150" height="70"/>
+    <rect x="570" y="320" width="150" height="70"/>
+  </g>
+</svg>

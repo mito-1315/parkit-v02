@@ -1,0 +1,362 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// ─── ENUMS ─────────────────────────────────────────────────────────────────
+
+enum SlotStatus {
+  AVAILABLE
+  RESERVED
+  OCCUPIED
+  MAINTENANCE
+  BLOCKED
+  UNKNOWN
+}
+
+enum SlotType {
+  NORMAL
+  EV
+  ACCESSIBLE
+  VIP
+  TWO_WHEELER
+  HEAVY
+}
+
+enum CameraType {
+  PARKING_SLOT_CAM
+  GATE_ENTRY_CAM
+  GATE_EXIT_CAM
+  ANPR
+}
+
+enum CameraStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+}
+
+enum GateStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+}
+
+enum GateType {
+  ENTRY
+  EXIT
+  BOTH
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  FACILITY_ADMIN
+  SECURITY_STAFF
+}
+
+enum VehicleType {
+  CAR
+  BIKE
+  EV_CAR
+  EV_BIKE
+  TRUCK
+  OTHER
+}
+
+enum SessionStatus {
+  RESERVED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  NOT_APPLICABLE
+  PENDING
+  PAID
+}
+
+enum DetectionType {
+  SLOT_OCCUPANCY
+  VEHICLE_PLATE
+}
+
+enum DetectedStatus {
+  EMPTY
+  OCCUPIED
+}
+
+enum AlertType {
+  PARKING_FULL
+  CAMERA_OFFLINE
+  SLOT_CONFLICT
+  LOW_CONFIDENCE_DETECTION
+  UNAUTHORIZED_SLOT_OCCUPANCY
+  ENTRANCE_CONGESTION
+  OTHER
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum OnboardingStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum RawDetectionStatus {
+  PENDING_REVIEW
+  CONFIRMED
+  REJECTED
+  DUPLICATE_REMOVED
+}
+
+// ─── MODELS ─────────────────────────────────────────────────────────────────
+
+model Facility {
+  facility_id          Int               @id @default(autoincrement())
+  name                 String
+  address              String
+  city                 String
+  state                String
+  country              String
+  pincode              String
+  contact_phone        String
+  contact_email        String
+  total_slots          Int
+  is_active            Boolean           @default(true)
+  onboarding_status    OnboardingStatus  @default(NOT_STARTED)
+  onboarding_step      Int               @default(0)
+  hourly_rate          Decimal           @default(0) @db.Decimal(10, 2)
+  currency             String            @default("INR")
+  grace_period_minutes Int               @default(0)
+  minimum_fee          Decimal           @default(0) @db.Decimal(10, 2)
+  created_at           DateTime          @default(now())
+  updated_at           DateTime          @updatedAt
+
+  zones                 Zone[]
+  parking_slots         ParkingSlot[]
+  cameras               Camera[]
+  gates                 Gate[]
+  admin_users           AdminUser[]
+  parking_sessions      ParkingSession[]
+  alerts                Alert[]
+  raw_slot_detections   RawSlotDetection[]
+}
+
+model Zone {
+  zone_id       Int      @id @default(autoincrement())
+  facility_id   Int
+  name          String
+  floor_level   Int
+  description   String?
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+
+  facility      Facility      @relation(fields: [facility_id], references: [facility_id])
+  parking_slots ParkingSlot[]
+}
+
+model ParkingSlot {
+  slot_id                Int        @id @default(autoincrement())
+  facility_id            Int
+  zone_id                Int
+  slot_code              String
+  slot_type              SlotType
+  status                 SlotStatus @default(UNKNOWN)
+  coordinates            String?
+  distance_from_gate     Float?
+  is_active              Boolean    @default(true)
+  last_status_updated_at DateTime   @default(now())
+  created_at             DateTime   @default(now())
+  primary_camera_id      Int?
+  source_detection_id    Int?
+
+  facility        Facility             @relation(fields: [facility_id], references: [facility_id])
+  zone            Zone                 @relation(fields: [zone_id], references: [zone_id])
+  primary_camera  Camera?              @relation("PrimaryCamera", fields: [primary_camera_id], references: [camera_id])
+  parking_sessions ParkingSession[]
+  detections      Detection[]
+  alerts          Alert[]              @relation("RelatedSlot")
+
+  @@unique([facility_id, slot_code])
+}
+
+model Camera {
+  camera_id            Int          @id @default(autoincrement())
+  facility_id          Int
+  zone_id              Int?
+  name                 String
+  camera_type          CameraType
+  stream_url           String?
+  location_description String?
+  status               CameraStatus @default(ONLINE)
+  empty_lot_image_url  String?
+  installed_at         DateTime     @default(now())
+  last_heartbeat_at    DateTime     @default(now())
+  created_at           DateTime     @default(now())
+
+  facility              Facility            @relation(fields: [facility_id], references: [facility_id])
+  gate                  Gate?
+  detections            Detection[]
+  alerts                Alert[]             @relation("RelatedCamera")
+  monitored_slots       ParkingSlot[]       @relation("PrimaryCamera")
+  raw_slot_detections   RawSlotDetection[]
+}
+
+model RawSlotDetection {
+  detection_id     Int                @id @default(autoincrement())
+  camera_id        Int
+  facility_id      Int
+  suggested_code   String
+  bounding_box     Json
+  confidence       Float
+  status           RawDetectionStatus @default(PENDING_REVIEW)
+  duplicate_of_id  Int?
+  promoted_slot_id Int?
+  created_at       DateTime           @default(now())
+
+  camera       Camera            @relation(fields: [camera_id], references: [camera_id])
+  facility     Facility          @relation(fields: [facility_id], references: [facility_id])
+  duplicate_of RawSlotDetection? @relation("DetectionDuplicate", fields: [duplicate_of_id], references: [detection_id])
+  duplicates   RawSlotDetection[] @relation("DetectionDuplicate")
+}
+
+model Gate {
+  gate_id              Int        @id @default(autoincrement())
+  facility_id          Int
+  camera_id            Int?       @unique
+  name                 String
+  gate_type            GateType
+  qr_code              String     @unique
+  location_description String?
+  status               GateStatus @default(ONLINE)
+  created_at           DateTime   @default(now())
+
+  facility       Facility         @relation(fields: [facility_id], references: [facility_id])
+  camera         Camera?          @relation(fields: [camera_id], references: [camera_id])
+  entry_sessions ParkingSession[] @relation("EntryGate")
+  exit_sessions  ParkingSession[] @relation("ExitGate")
+  detections     Detection[]
+  alerts         Alert[]          @relation("RelatedGate")
+}
+
+model AdminUser {
+  admin_id      Int       @id @default(autoincrement())
+  facility_id   Int
+  name          String
+  email         String    @unique
+  phone_number  String?
+  password_hash String
+  role          AdminRole
+  is_active     Boolean   @default(true)
+  last_login_at DateTime?
+  created_at    DateTime  @default(now())
+
+  facility Facility @relation(fields: [facility_id], references: [facility_id])
+  alerts   Alert[]  @relation("ResolvedBy")
+}
+
+model User {
+  user_id       Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  phone_number  String?
+  password_hash String
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now())
+
+  vehicles         Vehicle[]
+  parking_sessions ParkingSession[]
+}
+
+model Vehicle {
+  vehicle_id    Int         @id @default(autoincrement())
+  user_id       Int
+  license_plate String      @unique
+  vehicle_type  VehicleType
+  make          String?
+  model         String?
+  color         String?
+  is_registered Boolean     @default(true)
+  created_at    DateTime    @default(now())
+
+  user             User             @relation(fields: [user_id], references: [user_id])
+  parking_sessions ParkingSession[]
+}
+
+model ParkingSession {
+  session_id       Int           @id @default(autoincrement())
+  facility_id      Int
+  vehicle_id       Int
+  user_id          Int
+  slot_id          Int
+  entry_gate_id    Int?
+  exit_gate_id     Int?
+  allocated_at     DateTime      @default(now())
+  entry_time       DateTime?
+  exit_time        DateTime?
+  status           SessionStatus @default(RESERVED)
+  duration_minutes Int?
+  parking_fee      Decimal?
+  payment_status   PaymentStatus @default(NOT_APPLICABLE)
+  created_at       DateTime      @default(now())
+
+  facility   Facility    @relation(fields: [facility_id], references: [facility_id])
+  vehicle    Vehicle     @relation(fields: [vehicle_id], references: [vehicle_id])
+  user       User        @relation(fields: [user_id], references: [user_id])
+  slot       ParkingSlot @relation(fields: [slot_id], references: [slot_id])
+  entry_gate Gate?       @relation("EntryGate", fields: [entry_gate_id], references: [gate_id])
+  exit_gate  Gate?       @relation("ExitGate", fields: [exit_gate_id], references: [gate_id])
+  alerts     Alert[]     @relation("RelatedSession")
+}
+
+model Detection {
+  detection_id           Int             @id @default(autoincrement())
+  camera_id              Int
+  slot_id                Int?
+  gate_id                Int?
+  detection_type         DetectionType
+  detected_status        DetectedStatus?
+  license_plate_detected String?
+  confidence_score       Float?
+  bounding_box           String?
+  detected_at            DateTime        @default(now())
+  created_at             DateTime        @default(now())
+
+  camera Camera       @relation(fields: [camera_id], references: [camera_id])
+  slot   ParkingSlot? @relation(fields: [slot_id], references: [slot_id])
+  gate   Gate?        @relation(fields: [gate_id], references: [gate_id])
+}
+
+model Alert {
+  alert_id           Int           @id @default(autoincrement())
+  facility_id        Int
+  alert_type         AlertType
+  severity           AlertSeverity
+  related_camera_id  Int?
+  related_slot_id    Int?
+  related_gate_id    Int?
+  related_session_id Int?
+  message            String
+  is_resolved        Boolean       @default(false)
+  resolved_by        Int?
+  resolved_at        DateTime?
+  created_at         DateTime      @default(now())
+
+  facility        Facility        @relation(fields: [facility_id], references: [facility_id])
+  related_camera  Camera?         @relation("RelatedCamera", fields: [related_camera_id], references: [camera_id])
+  related_slot    ParkingSlot?    @relation("RelatedSlot", fields: [related_slot_id], references: [slot_id])
+  related_gate    Gate?           @relation("RelatedGate", fields: [related_gate_id], references: [gate_id])
+  related_session ParkingSession? @relation("RelatedSession", fields: [related_session_id], references: [session_id])
+  admin_resolver  AdminUser?      @relation("ResolvedBy", fields: [resolved_by], references: [admin_id])
+}

@@ -1,0 +1,2 @@
+// validations/ — one Zod schema per resource
+// Used by validateRequest middleware (Phase 2)

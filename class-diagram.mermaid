@@ -1,0 +1,189 @@
+classDiagram
+
+    class Facility {
+        +int facility_id PK
+        +string name
+        +string address
+        +string city
+        +string state
+        +string country
+        +string pincode
+        +string contact_phone
+        +string contact_email
+        +int total_slots
+        +bool is_active
+        +datetime created_at
+        +datetime updated_at
+    }
+
+    class Zone {
+        +int zone_id PK
+        +int facility_id FK
+        +string name
+        +int floor_level
+        +string description
+        +bool is_active
+        +datetime created_at
+    }
+
+    class ParkingSlot {
+        +int slot_id PK
+        +int facility_id FK
+        +int zone_id FK
+        +string slot_code
+        +string slot_type
+        +string status
+        +string coordinates
+        +float distance_from_gate
+        +bool is_active
+        +datetime last_status_updated_at
+        +datetime created_at
+    }
+
+    class Camera {
+        +int camera_id PK
+        +int facility_id FK
+        +int zone_id FK
+        +string name
+        +string camera_type
+        +string stream_url
+        +string location_description
+        +string status
+        +datetime installed_at
+        +datetime last_heartbeat_at
+        +datetime created_at
+    }
+
+    class CameraSlotCoverage {
+        +int coverage_id PK
+        +int camera_id FK
+        +int slot_id FK
+        +bool is_primary
+        +bool confirmed_by_admin
+        +datetime created_at
+    }
+
+    class Gate {
+        +int gate_id PK
+        +int facility_id FK
+        +int camera_id FK
+        +string name
+        +string gate_type
+        +string qr_code
+        +string location_description
+        +string status
+        +datetime created_at
+    }
+
+    class AdminUser {
+        +int admin_id PK
+        +int facility_id FK
+        +string name
+        +string email
+        +string phone_number
+        +string password_hash
+        +string role
+        +bool is_active
+        +datetime last_login_at
+        +datetime created_at
+    }
+
+    class User {
+        +int user_id PK
+        +string name
+        +string email
+        +string phone_number
+        +string password_hash
+        +bool is_active
+        +datetime created_at
+    }
+
+    class Vehicle {
+        +int vehicle_id PK
+        +int user_id FK
+        +string license_plate
+        +string vehicle_type
+        +string make
+        +string model
+        +string color
+        +bool is_registered
+        +datetime created_at
+    }
+
+    class ParkingSession {
+        +int session_id PK
+        +int facility_id FK
+        +int vehicle_id FK
+        +int user_id FK
+        +int slot_id FK
+        +int entry_gate_id FK
+        +int exit_gate_id FK
+        +datetime allocated_at
+        +datetime entry_time
+        +datetime exit_time
+        +string status
+        +int duration_minutes
+        +decimal parking_fee
+        +string payment_status
+        +datetime created_at
+    }
+
+    class Detection {
+        +int detection_id PK
+        +int camera_id FK
+        +int slot_id FK
+        +int gate_id FK
+        +string detection_type
+        +string detected_status
+        +string license_plate_detected
+        +float confidence_score
+        +string bounding_box
+        +datetime detected_at
+        +datetime created_at
+    }
+
+    class Alert {
+        +int alert_id PK
+        +int facility_id FK
+        +string alert_type
+        +string severity
+        +int related_camera_id FK
+        +int related_slot_id FK
+        +int related_gate_id FK
+        +int related_session_id FK
+        +string message
+        +bool is_resolved
+        +int resolved_by FK
+        +datetime resolved_at
+        +datetime created_at
+    }
+
+    Facility "1" --> "0..*" Zone : has
+    Facility "1" --> "0..*" ParkingSlot : has
+    Zone "1" --> "0..*" ParkingSlot : contains
+    Facility "1" --> "0..*" Camera : owns
+    Facility "1" --> "0..*" Gate : has
+    Facility "1" --> "0..*" AdminUser : employs
+    Facility "1" --> "0..*" ParkingSession : hosts
+    Facility "1" --> "0..*" Alert : raises
+
+    ParkingSlot "1" --> "0..*" CameraSlotCoverage : covered_by
+    Camera "1" --> "0..*" CameraSlotCoverage : covers
+
+    Gate "0..1" --> "0..1" Camera : uses
+
+    User "1" --> "0..*" Vehicle : owns
+    User "1" --> "0..*" ParkingSession : books
+
+    Vehicle "1" --> "0..*" ParkingSession : involved_in
+
+    ParkingSlot "1" --> "0..*" ParkingSession : allocated_to
+
+    Gate "1" --> "0..*" ParkingSession : entry_point
+    Gate "1" --> "0..*" ParkingSession : exit_point
+
+    Camera "1" --> "0..*" Detection : generates
+    ParkingSlot "1" --> "0..*" Detection : observed_in
+    Gate "1" --> "0..*" Detection : observed_at
+
+    AdminUser "1" --> "0..*" Alert : resolves
