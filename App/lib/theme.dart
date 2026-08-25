@@ -49,11 +49,19 @@ InputDecoration pkInputDecoration({
     filled: true,
     fillColor: Pk.surface2,
     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+<<<<<<< HEAD
     border: const OutlineInputBorder(borderRadius: r, borderSide: BorderSide(color: Pk.border)),
     enabledBorder: const OutlineInputBorder(borderRadius: r, borderSide: BorderSide(color: Pk.border)),
     focusedBorder: const OutlineInputBorder(borderRadius: r, borderSide: BorderSide(color: Pk.primary, width: 1.5)),
     errorBorder: const OutlineInputBorder(borderRadius: r, borderSide: BorderSide(color: Pk.danger, width: 1.5)),
     focusedErrorBorder: const OutlineInputBorder(borderRadius: r, borderSide: BorderSide(color: Pk.danger, width: 1.5)),
+=======
+    border: OutlineInputBorder(borderRadius: r, borderSide: const BorderSide(color: Pk.border)),
+    enabledBorder: OutlineInputBorder(borderRadius: r, borderSide: const BorderSide(color: Pk.border)),
+    focusedBorder: OutlineInputBorder(borderRadius: r, borderSide: const BorderSide(color: Pk.primary, width: 1.5)),
+    errorBorder: OutlineInputBorder(borderRadius: r, borderSide: const BorderSide(color: Pk.danger, width: 1.5)),
+    focusedErrorBorder: OutlineInputBorder(borderRadius: r, borderSide: const BorderSide(color: Pk.danger, width: 1.5)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     errorStyle: const TextStyle(color: Pk.dangerLt, fontSize: 12),
   );
 }
@@ -102,12 +110,20 @@ ThemeData parkitTheme() {
         side: BorderSide(color: Pk.border),
       ),
     ),
+<<<<<<< HEAD
     inputDecorationTheme: const InputDecorationTheme(
+=======
+    inputDecorationTheme: InputDecorationTheme(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       filled: true,
       fillColor: Pk.surface2,
       border: OutlineInputBorder(
         borderRadius: Pk.r6,
+<<<<<<< HEAD
         borderSide: BorderSide(color: Pk.border),
+=======
+        borderSide: const BorderSide(color: Pk.border),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       ),
     ),
     snackBarTheme: const SnackBarThemeData(

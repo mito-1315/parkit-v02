@@ -1,4 +1,5 @@
 @import "tailwindcss";
+<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 @theme {
@@ -23,6 +24,25 @@
 :root {
   --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+=======
+
+@theme {
+  --color-bg-base: #12151a;
+  --color-bg-surface: #1b1f27;
+  --color-bg-elevated: #232833;
+  --color-border-hairline: #2a2f3a;
+  --color-text-primary: #e8eaed;
+  --color-text-muted: #8b92a0;
+  --color-signal-available: #35c57a;
+  --color-signal-occupied: #e5484d;
+  --color-signal-reserved: #f2a93b;
+  --color-signal-offline: #5b6472;
+  --color-accent-brand: #3e7bfa;
+
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 }
 
 html,
@@ -36,6 +56,7 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+<<<<<<< HEAD
   -moz-osx-font-smoothing: grayscale;
 }
 
@@ -59,6 +80,10 @@ body {
 }
 
 /* Focus styles */
+=======
+}
+
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 *:focus-visible {
   outline: 2px solid var(--color-accent-brand);
   outline-offset: 2px;
@@ -74,6 +99,7 @@ body {
   }
 }
 
+<<<<<<< HEAD
 /* Claymorphism Base Utility Classes */
 .clay-card {
   background: #FFFFFF;
@@ -349,6 +375,8 @@ body {
 }
 
 /* Animations */
+=======
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 @keyframes live-pulse {
   0%,
   100% {
@@ -361,10 +389,17 @@ body {
 
 @keyframes slot-glow {
   0% {
+<<<<<<< HEAD
     box-shadow: 0 0 0 0 rgba(46, 46, 46, 0.3);
   }
   100% {
     box-shadow: 0 0 16px 2px rgba(46, 46, 46, 0.15);
+=======
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  100% {
+    box-shadow: 0 0 18px 2px currentColor;
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   }
 }
 

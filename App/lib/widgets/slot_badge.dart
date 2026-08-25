@@ -23,7 +23,11 @@ class SlotBadge extends StatelessWidget {
           width: size,
           height: size,
           alignment: Alignment.center,
+<<<<<<< HEAD
           decoration: const BoxDecoration(
+=======
+          decoration: BoxDecoration(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             color: Pk.primary,
             borderRadius: Pk.r8,
           ),

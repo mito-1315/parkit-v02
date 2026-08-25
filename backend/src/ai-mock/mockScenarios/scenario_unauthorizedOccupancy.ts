@@ -6,7 +6,11 @@
  * This triggers the UNAUTHORIZED_SLOT_OCCUPANCY alert in Phase 5.
  */
 import { prisma } from '../../database/prismaClient';
+<<<<<<< HEAD
 import { DetectedStatus, DetectionType } from '../../enums';
+=======
+import { DetectedStatus, DetectionType } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export async function runUnauthorizedOccupancy(cameraId: number, slotId: number) {
   console.log(`[scenario_unauthorizedOccupancy] Slot ${slotId} flipped OCCUPIED with no session`);

@@ -76,10 +76,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       name: _name.text.trim(),
                       phone: _phone.text.trim(),
                     );
+<<<<<<< HEAD
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Profile updated')),
                 );
+=======
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Profile updated')),
+                  );
+                }
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               } finally {
                 if (mounted) setState(() => _saving = false);
               }

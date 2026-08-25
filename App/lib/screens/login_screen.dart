@@ -66,6 +66,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     child: Column(
                       children: [
                         Container(
+<<<<<<< HEAD
                           width: 88,
                           height: 88,
                           decoration: BoxDecoration(
@@ -83,6 +84,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           child: Image.asset(
                             'assets/parkit_logo.png',
                             fit: BoxFit.contain,
+=======
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: Pk.primary,
+                            borderRadius: Pk.r8,
+                          ),
+                          child: const Icon(
+                            Icons.local_parking_rounded,
+                            color: Colors.white,
+                            size: 34,
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -169,10 +182,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Center(
                     child: GestureDetector(
                       onTap: () => context.push('/register'),
+<<<<<<< HEAD
                       child: const Text.rich(
                         TextSpan(
                           text: "Don't have an account? ",
                           style: TextStyle(
+=======
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Don't have an account? ",
+                          style: const TextStyle(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                               color: Pk.textSecondary, fontSize: 13),
                           children: [
                             TextSpan(

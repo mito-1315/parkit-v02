@@ -31,7 +31,37 @@ Future<SharedPreferences> _fakePrefs() async {
   return SharedPreferences.getInstance();
 }
 
+<<<<<<< HEAD
 // Removed unused helper `_wrapWithProviders` to silence unused_element diagnostic.
+=======
+Widget _wrapWithProviders({
+  required Widget child,
+  required MockApiClient mockApi,
+  ParkingSession? activeSession,
+}) {
+  return ProviderScope(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(
+          SharedPreferences.getInstance() as SharedPreferences),
+      apiClientProvider.overrideWithValue(mockApi),
+      socketServiceProvider.overrideWithValue(MockSocketService()),
+      authProvider.overrideWith((ref) {
+        final notifier = AuthNotifier(mockApi);
+        notifier.state = AsyncValue.data(
+          const User(id: 1, name: 'Test User', email: 'test@test.com'),
+        );
+        return notifier;
+      }),
+      activeSessionProvider.overrideWith((ref) {
+        final notifier = SessionNotifier(mockApi, ref);
+        notifier.state = AsyncValue.data(activeSession);
+        return notifier;
+      }),
+    ],
+    child: MaterialApp(home: child),
+  );
+}
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 void main() {
   late MockApiClient mockApi;
@@ -58,8 +88,13 @@ void main() {
           socketServiceProvider.overrideWithValue(mockSocket),
           authProvider.overrideWith((ref) {
             final n = AuthNotifier(mockApi);
+<<<<<<< HEAD
             n.state = const AsyncValue.data(
               User(id: 1, name: 'Test', email: 't@t.com'),
+=======
+            n.state = AsyncValue.data(
+              const User(id: 1, name: 'Test', email: 't@t.com'),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             );
             return n;
           }),
@@ -95,8 +130,13 @@ void main() {
           socketServiceProvider.overrideWithValue(mockSocket),
           authProvider.overrideWith((ref) {
             final n = AuthNotifier(mockApi);
+<<<<<<< HEAD
             n.state = const AsyncValue.data(
               User(id: 1, name: 'Test', email: 't@t.com'),
+=======
+            n.state = AsyncValue.data(
+              const User(id: 1, name: 'Test', email: 't@t.com'),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             );
             return n;
           }),

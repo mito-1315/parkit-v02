@@ -5,7 +5,10 @@ import { useAlertEvents } from '../hooks/useSocketEvents';
 import { useAuthStore } from '../store/authStore';
 import { alertIdOf, alertMessageOf, alertTypeOf, isAlertResolved } from '../lib/ids';
 import { EmptyState, StatusBadge } from '../components/ui';
+<<<<<<< HEAD
 import { CheckCircle2, AlertCircle } from 'lucide-react';
+=======
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 const TYPES = [
   'PARKING_FULL',
@@ -38,6 +41,14 @@ export const Alerts: React.FC = () => {
   });
 
   useEffect(() => {
+<<<<<<< HEAD
+=======
+    const onNew = (alert: any) => {
+      setToast(alertMessageOf(alert) || 'New alert');
+      const t = window.setTimeout(() => setToast(null), 4000);
+      return () => window.clearTimeout(t);
+    };
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     // fallback timer toast if sockets are quiet
     const timer = window.setInterval(() => {
       const open = (alerts || []).filter((a: any) => !isAlertResolved(a));
@@ -60,6 +71,7 @@ export const Alerts: React.FC = () => {
   if (!activeFacilityId) return <EmptyState title="Select a facility to view alerts." />;
 
   return (
+<<<<<<< HEAD
     <div className="space-y-6 font-sans">
       <div>
         <h1 className="font-display text-3xl font-bold tracking-tight text-[#2E2E2E]">ALERTS QUEUE</h1>
@@ -81,20 +93,41 @@ export const Alerts: React.FC = () => {
           className="clay-input px-3.5 py-2 text-xs font-medium text-[#2E2E2E]"
         >
           <option value="">All Severities</option>
+=======
+    <div className="space-y-4">
+      <div>
+        <h1 className="font-display text-3xl tracking-wide">ALERTS</h1>
+        <p className="text-sm text-text-muted">Severity-coded queue for the current shift.</p>
+      </div>
+      {toast && (
+        <div className="rounded border border-signal-reserved/40 bg-signal-reserved/10 px-3 py-2 text-sm text-signal-reserved">
+          {toast}
+        </div>
+      )}
+      <div className="flex flex-wrap gap-2">
+        <select value={severity} onChange={(e) => setSeverity(e.target.value)} className="rounded border border-border-hairline bg-bg-elevated px-2 py-1.5 text-sm">
+          <option value="">All severities</option>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           <option>INFO</option>
           <option>WARNING</option>
           <option>CRITICAL</option>
         </select>
+<<<<<<< HEAD
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
           className="clay-input px-3.5 py-2 text-xs font-medium text-[#2E2E2E]"
         >
           <option value="">All Incident Types</option>
+=======
+        <select value={type} onChange={(e) => setType(e.target.value)} className="rounded border border-border-hairline bg-bg-elevated px-2 py-1.5 text-sm">
+          <option value="">All types</option>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           {TYPES.map((t) => (
             <option key={t}>{t}</option>
           ))}
         </select>
+<<<<<<< HEAD
         <select
           value={resolved}
           onChange={(e) => setResolved(e.target.value as any)}
@@ -139,6 +172,37 @@ export const Alerts: React.FC = () => {
                 <span className="clay-badge px-3 py-1 text-[11px] bg-[#F5F5F5] text-[#6E6E6E] shrink-0">
                   Resolved
                 </span>
+=======
+        <select value={resolved} onChange={(e) => setResolved(e.target.value as any)} className="rounded border border-border-hairline bg-bg-elevated px-2 py-1.5 text-sm">
+          <option value="open">Unresolved</option>
+          <option value="resolved">Resolved</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+      {isLoading ? (
+        <p className="text-text-muted">Loading alerts…</p>
+      ) : !filtered.length ? (
+        <EmptyState title="No alerts match these filters." hint="Clear filters or wait for the next camera/session event." />
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((alert: any) => (
+            <div key={alertIdOf(alert)} className="flex items-start justify-between rounded-lg border border-border-hairline bg-bg-surface p-3">
+              <div>
+                <div className="mb-1 flex items-center gap-2">
+                  <StatusBadge status={alert.severity} />
+                  <span className="font-mono text-xs">{alertTypeOf(alert)}</span>
+                </div>
+                <p className="text-sm">{alertMessageOf(alert)}</p>
+                <p className="mt-1 font-mono text-[11px] text-text-muted">{new Date(alert.created_at).toLocaleString()}</p>
+              </div>
+              {!isAlertResolved(alert) && (
+                <button
+                  onClick={() => resolveMutation.mutate(alertIdOf(alert)!)}
+                  className="rounded bg-signal-available/15 px-3 py-1.5 text-xs text-signal-available"
+                >
+                  Resolve
+                </button>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               )}
             </div>
           ))}

@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { CameraType, GateType, SlotType } from '../enums';
+=======
+import { CameraType, GateType, SlotType } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const onboardingFacilitySchema = z.object({
   body: z.object({

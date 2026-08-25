@@ -101,7 +101,11 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
                       child: Container(
                         width: 80,
                         height: 80,
+<<<<<<< HEAD
                         decoration: const BoxDecoration(
+=======
+                        decoration: BoxDecoration(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                           color: Pk.success,
                           borderRadius: Pk.r8,
                         ),
@@ -150,7 +154,11 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
                             _Row('Floor', 'Level $floor'),
                           if (floor != null)
                             const Divider(color: Pk.border, height: 1),
+<<<<<<< HEAD
                           const _Row('Status', 'Reserved'),
+=======
+                          _Row('Status', 'Reserved'),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                         ],
                       ),
                     ),
@@ -164,9 +172,15 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
                         borderRadius: Pk.r6,
                         border: Border.all(color: Pk.border2),
                       ),
+<<<<<<< HEAD
                       child: const Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+=======
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                           Icon(Icons.info_outline_rounded,
                               color: Pk.textMuted, size: 16),
                           SizedBox(width: 10),
@@ -204,10 +218,17 @@ class _SlotAllocatedScreenState extends ConsumerState<SlotAllocatedScreen>
                       },
                     ),
                     const SizedBox(height: 10),
+<<<<<<< HEAD
                       Text(
                       'Auto-navigating in 8 seconds…',
                       style: TextStyle(
                         color: Colors.white.withAlpha((0.2 * 255).round()),
+=======
+                    Text(
+                      'Auto-navigating in 8 seconds…',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.2),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                         fontSize: 11,
                       ),
                     ),

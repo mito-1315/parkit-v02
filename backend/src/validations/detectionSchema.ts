@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { DetectionType, DetectedStatus } from '../enums';
+=======
+import { DetectionType, DetectedStatus } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const createDetectionSchema = z.object({
   body: z.object({

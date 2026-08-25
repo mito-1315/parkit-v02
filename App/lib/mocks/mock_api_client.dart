@@ -113,7 +113,11 @@ class MockApiClient implements ApiClient {
       entryGateId: gateId,
       entryTime: DateTime.now(),
       facilityName: 'Central Plaza Parking',
+<<<<<<< HEAD
       slot: const Slot(id: 7, label: 'A-07', floor: 1, status: 'RESERVED', zoneId: 1, zone: Zone(id: 1, name: 'Ground Floor', facilityId: 1)),
+=======
+      slot: Slot(id: 7, label: 'A-07', floor: 1, status: 'RESERVED', zoneId: 1, zone: Zone(id: 1, name: 'Ground Floor', facilityId: 1)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       vehicle: Vehicle(id: 1, licensePlate: licensePlate, vehicleType: 'CAR', userId: 1),
     );
     return _active!;

@@ -121,8 +121,13 @@ class _EmptyState extends StatelessWidget {
           Container(
             width: 72,
             height: 72,
+<<<<<<< HEAD
               decoration: BoxDecoration(
               color: const Color(0xFF6366F1).withAlpha((0.1 * 255).round()),
+=======
+            decoration: BoxDecoration(
+              color: const Color(0xFF6366F1).withOpacity(0.1),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.directions_car_outlined,
@@ -223,7 +228,11 @@ class _AddVehicleSheetState extends ConsumerState<_AddVehicleSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
+<<<<<<< HEAD
                   color: Colors.white.withAlpha((0.15 * 255).round()),
+=======
+                  color: Colors.white.withOpacity(0.15),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -251,7 +260,11 @@ class _AddVehicleSheetState extends ConsumerState<_AddVehicleSheet> {
             // Type dropdown
             DropdownButtonFormField<String>(
               key: const Key('vehicle_type_dropdown'),
+<<<<<<< HEAD
               initialValue: _vehicleType,
+=======
+              value: _vehicleType,
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               dropdownColor: const Color(0xFF1A1A2E),
               style: const TextStyle(color: Colors.white),
               decoration: _deco('Vehicle Type'),
@@ -328,9 +341,15 @@ class _AddVehicleSheetState extends ConsumerState<_AddVehicleSheet> {
             const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         border:
             OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+<<<<<<< HEAD
           enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: Colors.white.withAlpha((0.08 * 255).round())),
+=======
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.08)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

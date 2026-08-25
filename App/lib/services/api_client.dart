@@ -152,7 +152,11 @@ class ApiClient {
   ) {
     final data = response.data;
     if (data is Map<String, dynamic>) return fromJson(data);
+<<<<<<< HEAD
     throw const ApiException('Unexpected response shape');
+=======
+    throw ApiException('Unexpected response shape');
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   }
 
   List<T> _parseList<T>(
@@ -180,6 +184,12 @@ class ApiClient {
     return [];
   }
 
+<<<<<<< HEAD
+=======
+  DioException _asDioException(Object e) =>
+      e is DioException ? e : DioException(requestOptions: RequestOptions());
+
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   ApiException _wrap(Object e) {
     if (e is DioException) {
       final msg =

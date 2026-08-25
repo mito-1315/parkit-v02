@@ -40,7 +40,11 @@ void main() {
   });
 
   /// Creates an allocated session used in the scan → allocated flow test.
+<<<<<<< HEAD
   ParkingSession allocatedSession() {
+=======
+  ParkingSession _allocatedSession() {
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     return ParkingSession(
       id: 99,
       status: SessionStatus.reserved,
@@ -49,7 +53,11 @@ void main() {
       entryGateId: 1,
       entryTime: DateTime.now(),
       facilityName: 'Test Mall Parking',
+<<<<<<< HEAD
       slot: const Slot(
+=======
+      slot: Slot(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         id: 5,
         label: 'A-07',
         floor: 2,
@@ -70,7 +78,11 @@ void main() {
       'SlotAllocated: shows allocated slot info from active session',
       (tester) async {
     final prefs = await SharedPreferences.getInstance();
+<<<<<<< HEAD
     final session = allocatedSession();
+=======
+    final session = _allocatedSession();
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
     await tester.pumpWidget(
       ProviderScope(
@@ -105,7 +117,11 @@ void main() {
   testWidgets('Scan→Allocated flow: faked allocate returns RESERVED session',
       (tester) async {
     final prefs = await SharedPreferences.getInstance();
+<<<<<<< HEAD
     final session = allocatedSession();
+=======
+    final session = _allocatedSession();
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
     when(() => mockApi.allocate(
           licensePlate: any(named: 'licensePlate'),

@@ -118,7 +118,11 @@ class _HistoryRow extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
+<<<<<<< HEAD
                   color: Pk.primary.withAlpha((0.1 * 255).round()),
+=======
+              color: Pk.primary.withOpacity(0.1),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               borderRadius: Pk.r6,
             ),
             child: const Icon(Icons.local_parking_rounded,

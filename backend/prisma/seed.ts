@@ -1,9 +1,13 @@
 /* eslint-disable no-console */
+<<<<<<< HEAD
 import dotenv from 'dotenv';
 dotenv.config();
 
 import { PrismaClient } from '@prisma/client';
 import { AdminRole, CameraType, GateType, VehicleType, SlotType, AlertType, AlertSeverity, SessionStatus, PaymentStatus } from '../src/enums';
+=======
+import { PrismaClient, AdminRole, CameraType, GateType, VehicleType, SlotType, AlertType, AlertSeverity, SessionStatus, PaymentStatus } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();

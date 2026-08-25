@@ -1,5 +1,9 @@
 import bcrypt from 'bcrypt';
+<<<<<<< HEAD
 import { CameraType, GateType, SlotType } from '../enums';
+=======
+import { CameraType, GateType, SlotType } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 import { prisma } from '../database/prismaClient';
 import { AppError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../config/constants';

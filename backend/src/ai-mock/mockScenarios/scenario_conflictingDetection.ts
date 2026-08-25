@@ -9,7 +9,11 @@
  */
 import { AiAdapter } from '../aiAdapter.interface';
 import { prisma } from '../../database/prismaClient';
+<<<<<<< HEAD
 import { DetectedStatus, DetectionType } from '../../enums';
+=======
+import { DetectedStatus, DetectionType } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export async function runConflictingDetection(
   adapter: AiAdapter,

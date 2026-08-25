@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { AdminRole } from '../enums';
+=======
+import { AdminRole } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const userRegisterSchema = z.object({
   body: z.object({

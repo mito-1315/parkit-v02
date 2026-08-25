@@ -1,5 +1,9 @@
 datasource db {
+<<<<<<< HEAD
   provider = "sqlite"
+=======
+  provider = "postgresql"
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   url      = env("DATABASE_URL")
 }
 
@@ -7,6 +11,122 @@ generator client {
   provider = "prisma-client-js"
 }
 
+<<<<<<< HEAD
+=======
+// ─── ENUMS ─────────────────────────────────────────────────────────────────
+
+enum SlotStatus {
+  AVAILABLE
+  RESERVED
+  OCCUPIED
+  MAINTENANCE
+  BLOCKED
+  UNKNOWN
+}
+
+enum SlotType {
+  NORMAL
+  EV
+  ACCESSIBLE
+  VIP
+  TWO_WHEELER
+  HEAVY
+}
+
+enum CameraType {
+  PARKING_SLOT_CAM
+  GATE_ENTRY_CAM
+  GATE_EXIT_CAM
+  ANPR
+}
+
+enum CameraStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+}
+
+enum GateStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+}
+
+enum GateType {
+  ENTRY
+  EXIT
+  BOTH
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  FACILITY_ADMIN
+  SECURITY_STAFF
+}
+
+enum VehicleType {
+  CAR
+  BIKE
+  EV_CAR
+  EV_BIKE
+  TRUCK
+  OTHER
+}
+
+enum SessionStatus {
+  RESERVED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum PaymentStatus {
+  NOT_APPLICABLE
+  PENDING
+  PAID
+}
+
+enum DetectionType {
+  SLOT_OCCUPANCY
+  VEHICLE_PLATE
+}
+
+enum DetectedStatus {
+  EMPTY
+  OCCUPIED
+}
+
+enum AlertType {
+  PARKING_FULL
+  CAMERA_OFFLINE
+  SLOT_CONFLICT
+  LOW_CONFIDENCE_DETECTION
+  UNAUTHORIZED_SLOT_OCCUPANCY
+  ENTRANCE_CONGESTION
+  OTHER
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  CRITICAL
+}
+
+enum OnboardingStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum RawDetectionStatus {
+  PENDING_REVIEW
+  CONFIRMED
+  REJECTED
+  DUPLICATE_REMOVED
+}
+
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 // ─── MODELS ─────────────────────────────────────────────────────────────────
 
 model Facility {
@@ -21,12 +141,21 @@ model Facility {
   contact_email        String
   total_slots          Int
   is_active            Boolean           @default(true)
+<<<<<<< HEAD
   onboarding_status    String            @default("NOT_STARTED")
   onboarding_step      Int               @default(0)
   hourly_rate          Float             @default(0)
   currency             String            @default("INR")
   grace_period_minutes Int               @default(0)
   minimum_fee          Float             @default(0)
+=======
+  onboarding_status    OnboardingStatus  @default(NOT_STARTED)
+  onboarding_step      Int               @default(0)
+  hourly_rate          Decimal           @default(0) @db.Decimal(10, 2)
+  currency             String            @default("INR")
+  grace_period_minutes Int               @default(0)
+  minimum_fee          Decimal           @default(0) @db.Decimal(10, 2)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   created_at           DateTime          @default(now())
   updated_at           DateTime          @updatedAt
 
@@ -58,8 +187,13 @@ model ParkingSlot {
   facility_id            Int
   zone_id                Int
   slot_code              String
+<<<<<<< HEAD
   slot_type              String
   status                 String     @default("UNKNOWN")
+=======
+  slot_type              SlotType
+  status                 SlotStatus @default(UNKNOWN)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   coordinates            String?
   distance_from_gate     Float?
   is_active              Boolean    @default(true)
@@ -83,10 +217,17 @@ model Camera {
   facility_id          Int
   zone_id              Int?
   name                 String
+<<<<<<< HEAD
   camera_type          String
   stream_url           String?
   location_description String?
   status               String       @default("ONLINE")
+=======
+  camera_type          CameraType
+  stream_url           String?
+  location_description String?
+  status               CameraStatus @default(ONLINE)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   empty_lot_image_url  String?
   installed_at         DateTime     @default(now())
   last_heartbeat_at    DateTime     @default(now())
@@ -105,9 +246,15 @@ model RawSlotDetection {
   camera_id        Int
   facility_id      Int
   suggested_code   String
+<<<<<<< HEAD
   bounding_box     String
   confidence       Float
   status           String             @default("PENDING_REVIEW")
+=======
+  bounding_box     Json
+  confidence       Float
+  status           RawDetectionStatus @default(PENDING_REVIEW)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   duplicate_of_id  Int?
   promoted_slot_id Int?
   created_at       DateTime           @default(now())
@@ -123,10 +270,17 @@ model Gate {
   facility_id          Int
   camera_id            Int?       @unique
   name                 String
+<<<<<<< HEAD
   gate_type            String
   qr_code              String     @unique
   location_description String?
   status               String     @default("ONLINE")
+=======
+  gate_type            GateType
+  qr_code              String     @unique
+  location_description String?
+  status               GateStatus @default(ONLINE)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   created_at           DateTime   @default(now())
 
   facility       Facility         @relation(fields: [facility_id], references: [facility_id])
@@ -144,7 +298,11 @@ model AdminUser {
   email         String    @unique
   phone_number  String?
   password_hash String
+<<<<<<< HEAD
   role          String
+=======
+  role          AdminRole
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   is_active     Boolean   @default(true)
   last_login_at DateTime?
   created_at    DateTime  @default(now())
@@ -170,7 +328,11 @@ model Vehicle {
   vehicle_id    Int         @id @default(autoincrement())
   user_id       Int
   license_plate String      @unique
+<<<<<<< HEAD
   vehicle_type  String
+=======
+  vehicle_type  VehicleType
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   make          String?
   model         String?
   color         String?
@@ -192,10 +354,17 @@ model ParkingSession {
   allocated_at     DateTime      @default(now())
   entry_time       DateTime?
   exit_time        DateTime?
+<<<<<<< HEAD
   status           String        @default("RESERVED")
   duration_minutes Int?
   parking_fee      Float?
   payment_status   String        @default("NOT_APPLICABLE")
+=======
+  status           SessionStatus @default(RESERVED)
+  duration_minutes Int?
+  parking_fee      Decimal?
+  payment_status   PaymentStatus @default(NOT_APPLICABLE)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   created_at       DateTime      @default(now())
 
   facility   Facility    @relation(fields: [facility_id], references: [facility_id])
@@ -212,8 +381,13 @@ model Detection {
   camera_id              Int
   slot_id                Int?
   gate_id                Int?
+<<<<<<< HEAD
   detection_type         String
   detected_status        String?
+=======
+  detection_type         DetectionType
+  detected_status        DetectedStatus?
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   license_plate_detected String?
   confidence_score       Float?
   bounding_box           String?
@@ -228,8 +402,13 @@ model Detection {
 model Alert {
   alert_id           Int           @id @default(autoincrement())
   facility_id        Int
+<<<<<<< HEAD
   alert_type         String
   severity           String
+=======
+  alert_type         AlertType
+  severity           AlertSeverity
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   related_camera_id  Int?
   related_slot_id    Int?
   related_gate_id    Int?

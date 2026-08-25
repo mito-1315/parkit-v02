@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { VehicleType } from '../enums';
+=======
+import { VehicleType } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const createVehicleSchema = z.object({
   body: z.object({

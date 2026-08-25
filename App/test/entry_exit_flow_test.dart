@@ -53,7 +53,11 @@ void main() {
         status: SessionStatus.reserved,
         entryGateId: 1,
         vehicle: Vehicle(id: 1, licensePlate: plate, vehicleType: 'CAR', userId: 1),
+<<<<<<< HEAD
         slot: const Slot(id: 1, label: 'A-01', status: 'RESERVED', zoneId: 1),
+=======
+        slot: Slot(id: 1, label: 'A-01', status: 'RESERVED', zoneId: 1),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       );
     });
 

@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getOnboardingStatus } from '../api/onboarding';
 import { useAuthStore } from '../store/authStore';
+<<<<<<< HEAD
 import { Loader2, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import ParkitLogo from '../assets/Parkit Logo.png';
+=======
+import { Loader2 } from 'lucide-react';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const Landing: React.FC = () => {
   const navigate = useNavigate();
@@ -26,8 +30,13 @@ export const Landing: React.FC = () => {
 
   if (loading) {
     return (
+<<<<<<< HEAD
       <div className="flex min-h-screen items-center justify-center bg-[#F5F5F5]">
         <Loader2 className="animate-spin text-[#2E2E2E]" size={32} />
+=======
+      <div className="flex min-h-screen items-center justify-center bg-bg-base">
+        <Loader2 className="animate-spin text-accent-brand" />
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       </div>
     );
   }
@@ -36,6 +45,7 @@ export const Landing: React.FC = () => {
   const canStart = !status?.hasFacility;
 
   return (
+<<<<<<< HEAD
     <div className="flex min-h-screen items-center justify-center bg-[#F5F5F5] p-6 font-sans">
       <div className="w-full max-w-2xl">
         <div className="mb-10 text-center flex flex-col items-center">
@@ -51,10 +61,23 @@ export const Landing: React.FC = () => {
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Start Onboarding Card */}
+=======
+    <div className="flex min-h-screen items-center justify-center bg-bg-base p-4">
+      <div className="w-full max-w-2xl">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-accent-brand font-display text-2xl text-white">
+            P
+          </div>
+          <h1 className="font-display text-4xl tracking-wide">SMART PARKING</h1>
+          <p className="mt-2 text-sm text-text-muted">Facility control room — onboard once, then run live.</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           <button
             type="button"
             disabled={!canStart}
             onClick={() => navigate('/onboarding')}
+<<<<<<< HEAD
             className="clay-card-interactive p-8 text-left disabled:cursor-not-allowed disabled:opacity-40 flex flex-col justify-between group"
           >
             <div>
@@ -92,6 +115,25 @@ export const Landing: React.FC = () => {
               <span>Sign in</span>
               <ArrowRight size={14} />
             </div>
+=======
+            className="rounded-xl border border-border-hairline bg-bg-surface p-8 text-left transition hover:border-accent-brand disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <p className="font-display text-2xl tracking-wide">Start Onboarding</p>
+            <p className="mt-2 text-sm text-text-muted">
+              {canStart
+                ? 'Register this facility, cameras, slots, gates, and pricing.'
+                : 'A facility already exists on this install.'}
+            </p>
+          </button>
+          <Link
+            to="/login"
+            className="rounded-xl border border-border-hairline bg-bg-surface p-8 hover:border-accent-brand"
+          >
+            <p className="font-display text-2xl tracking-wide">Log In</p>
+            <p className="mt-2 text-sm text-text-muted">
+              {inProgress ? 'Resume the onboarding wizard at your last saved step.' : 'Open the live monitoring console.'}
+            </p>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           </Link>
         </div>
       </div>

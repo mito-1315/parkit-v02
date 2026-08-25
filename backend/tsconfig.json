@@ -25,7 +25,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+<<<<<<< HEAD
     "ignoreDeprecations": "5.0",
+=======
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
     /* Path aliases */
     "baseUrl": ".",

@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { CameraType, CameraStatus } from '../enums';
+=======
+import { CameraType, CameraStatus } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const createCameraSchema = z.object({
   body: z.object({

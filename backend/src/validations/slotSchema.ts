@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { SlotType, SlotStatus } from '../enums';
+=======
+import { SlotType, SlotStatus } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const createSlotSchema = z.object({
   body: z.object({

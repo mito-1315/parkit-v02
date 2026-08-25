@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_parking_app/models/parking_session.dart';
 import 'package:smart_parking_app/models/slot.dart';
 import 'package:smart_parking_app/providers/auth_provider.dart';
+<<<<<<< HEAD
+=======
+import 'package:smart_parking_app/providers/session_provider.dart';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 import 'package:smart_parking_app/screens/history_screen.dart';
 import 'package:smart_parking_app/services/api_client.dart';
 
@@ -58,7 +62,11 @@ void main() {
         entryTime: DateTime(2025, 1, 1, 10, 0),
         exitTime: DateTime(2025, 1, 1, 12, 30),
         facilityName: 'Mall A',
+<<<<<<< HEAD
         slot: const Slot(
+=======
+        slot: Slot(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           id: 1,
           label: 'A1',
           status: 'AVAILABLE',
@@ -72,7 +80,11 @@ void main() {
         entryTime: DateTime(2025, 1, 2, 14, 0),
         exitTime: DateTime(2025, 1, 2, 14, 45),
         facilityName: 'Mall B',
+<<<<<<< HEAD
         slot: const Slot(
+=======
+        slot: Slot(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           id: 2,
           label: 'B2',
           status: 'AVAILABLE',

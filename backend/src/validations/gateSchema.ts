@@ -1,5 +1,9 @@
 import { z } from 'zod';
+<<<<<<< HEAD
 import { GateType, GateStatus } from '../enums';
+=======
+import { GateType, GateStatus } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export const createGateSchema = z.object({
   body: z.object({

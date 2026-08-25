@@ -181,10 +181,17 @@ class _ErrorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
+<<<<<<< HEAD
         decoration: BoxDecoration(
         color: Pk.surface,
         borderRadius: Pk.r8,
         border: Border.all(color: Pk.danger.withAlpha((0.4 * 255).round())),
+=======
+      decoration: BoxDecoration(
+        color: Pk.surface,
+        borderRadius: Pk.r8,
+        border: Border.all(color: Pk.danger.withOpacity(0.4)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       ),
       child: Row(
         children: [
@@ -218,7 +225,11 @@ class _NoParkingCard extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
+<<<<<<< HEAD
               color: Pk.primary.withAlpha((0.12 * 255).round()),
+=======
+              color: Pk.primary.withOpacity(0.12),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               borderRadius: Pk.r8,
             ),
             child:
@@ -268,7 +279,11 @@ class _ActiveCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Pk.surface,
           borderRadius: Pk.r8,
+<<<<<<< HEAD
           border: Border.all(color: accentColor.withAlpha((0.35 * 255).round())),
+=======
+          border: Border.all(color: accentColor.withOpacity(0.35)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

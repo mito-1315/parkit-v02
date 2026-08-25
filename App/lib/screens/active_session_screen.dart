@@ -20,7 +20,11 @@ class ActiveSessionScreen extends ConsumerStatefulWidget {
 class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
   Timer? _ticker;
   Duration _elapsed = Duration.zero;
+<<<<<<< HEAD
   final bool _exiting = false;
+=======
+  bool _exiting = false;
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
   @override
   void initState() {
@@ -118,7 +122,11 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
                   decoration: BoxDecoration(
                     color: Pk.surface,
                     borderRadius: Pk.r8,
+<<<<<<< HEAD
                     border: Border.all(color: Pk.successLt.withAlpha((0.25 * 255).round())),
+=======
+                    border: Border.all(color: Pk.successLt.withOpacity(0.25)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                   ),
                   child: Column(
                     children: [
@@ -128,7 +136,11 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
                           Container(
                             width: 7,
                             height: 7,
+<<<<<<< HEAD
                             decoration: const BoxDecoration(
+=======
+                            decoration: BoxDecoration(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                               color: Pk.successLt,
                               shape: BoxShape.circle,
                             ),
@@ -203,9 +215,15 @@ class _ActiveSessionScreenState extends ConsumerState<ActiveSessionScreen> {
                     borderRadius: Pk.r6,
                     border: Border.all(color: Pk.border2),
                   ),
+<<<<<<< HEAD
                   child: const Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+=======
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                       Icon(Icons.info_outline_rounded,
                           color: Pk.textMuted, size: 16),
                       SizedBox(width: 10),

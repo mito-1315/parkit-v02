@@ -30,7 +30,11 @@ void main() {
 
   setUp(() {
     mockApi = MockApiClient();
+<<<<<<< HEAD
     registerFallbackValue(const AuthResponse(
+=======
+    registerFallbackValue(AuthResponse(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       accessToken: 'at',
       refreshToken: 'rt',
     ));
@@ -65,7 +69,11 @@ void main() {
           email: any(named: 'email'),
           password: any(named: 'password'),
           phone: any(named: 'phone'),
+<<<<<<< HEAD
         )).thenAnswer((_) async => const AuthResponse(
+=======
+        )).thenAnswer((_) async => AuthResponse(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           accessToken: 'access',
           refreshToken: 'refresh',
         ));

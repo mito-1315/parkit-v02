@@ -1,8 +1,16 @@
+<<<<<<< HEAD
+=======
+import React from 'react';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { LiveMonitoring } from '../../pages/LiveMonitoring';
 import { useAuthStore } from '../../store/authStore';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+<<<<<<< HEAD
+=======
+import { socketManager } from '../../sockets/socketManager';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 // Mock socket manager
 vi.mock('../../sockets/socketManager', () => ({

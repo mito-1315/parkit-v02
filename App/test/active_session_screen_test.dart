@@ -38,7 +38,11 @@ void main() {
     when(() => mockSocket.updates).thenAnswer((_) => const Stream.empty());
   });
 
+<<<<<<< HEAD
   ParkingSession activeSession() {
+=======
+  ParkingSession _activeSession() {
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     return ParkingSession(
       id: 100,
       status: SessionStatus.active,
@@ -47,7 +51,11 @@ void main() {
       entryGateId: 1,
       entryTime: DateTime.now().subtract(const Duration(minutes: 15, seconds: 30)),
       facilityName: 'Downtown Garage',
+<<<<<<< HEAD
       slot: const Slot(
+=======
+      slot: Slot(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         id: 5,
         label: 'B-12',
         floor: 1,
@@ -69,7 +77,11 @@ void main() {
   testWidgets('ActiveSession: renders elapsed time and session info',
       (tester) async {
     final prefs = await SharedPreferences.getInstance();
+<<<<<<< HEAD
     final session = activeSession();
+=======
+    final session = _activeSession();
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
     await tester.pumpWidget(
       ProviderScope(
@@ -110,7 +122,11 @@ void main() {
 
   testWidgets('ActiveSession: exit CTA is Scan Exit Gate', (tester) async {
     final prefs = await SharedPreferences.getInstance();
+<<<<<<< HEAD
     final session = activeSession();
+=======
+    final session = _activeSession();
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
     when(() => mockApi.confirmExit(any(), any()))
         .thenAnswer((_) async => session.copyWith(status: SessionStatus.completed));

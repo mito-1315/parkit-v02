@@ -4,7 +4,11 @@ import { prisma } from '../database/prismaClient';
 import { config } from '../config/env';
 import { AppError } from '../middleware/errorHandler';
 import { HTTP_STATUS } from '../config/constants';
+<<<<<<< HEAD
 import { AdminRole } from '../enums';
+=======
+import { AdminRole } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 export class AuthService {
   static generateTokens(payload: { id: number; type: 'user' | 'admin'; role?: string }) {

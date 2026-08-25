@@ -142,10 +142,17 @@ class SessionCard extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
+<<<<<<< HEAD
                 color: _statusColor(session.status).withAlpha((0.12 * 255).round()),
                 borderRadius: Pk.r4,
                 border: Border.all(
                     color: _statusColor(session.status).withAlpha((0.3 * 255).round())),
+=======
+                color: _statusColor(session.status).withOpacity(0.12),
+                borderRadius: Pk.r4,
+                border: Border.all(
+                    color: _statusColor(session.status).withOpacity(0.3)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               ),
               child: Text(
                 session.status.label,

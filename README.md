@@ -16,6 +16,7 @@ v01/
 └── docs/             Technical documents
 ```
 
+<<<<<<< HEAD
 ### backend/ — Node.js + Express + Prisma
 The REST API and real-time server. Tech: TypeScript, Express, Prisma ORM, Socket.IO, PostgreSQL.
 
@@ -28,6 +29,8 @@ The REST API and real-time server. Tech: TypeScript, Express, Prisma ORM, Socket
 | Other | `sockets/`, `validations/`, `config/`, `database/`, `ai-mock/`, `utils/` | WebSocket events, input validation, config, DB client, AI stubs |
 | Prisma | `schema.prisma`, `seed.ts`, `migrations/` | Database schema, seeding, migrations |
 
+=======
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 ---
 
 ## Prerequisites

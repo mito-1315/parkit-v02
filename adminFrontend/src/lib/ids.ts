@@ -32,6 +32,7 @@ export const isCoverageConfirmed = (row: any) =>
 export function slotSignalClass(status: string | undefined) {
   switch (status) {
     case 'AVAILABLE':
+<<<<<<< HEAD
       return 'bg-white text-[#2E2E2E] border border-[#E5E7EB] shadow-[4px_4px_10px_rgba(0,0,0,0.04),-4px_-4px_10px_rgba(255,255,255,0.95)] hover:border-[#2E2E2E]';
     case 'OCCUPIED':
       return 'bg-[#2E2E2E] text-white border border-[#2E2E2E] shadow-[4px_4px_12px_rgba(46,46,46,0.25)]';
@@ -39,5 +40,14 @@ export function slotSignalClass(status: string | undefined) {
       return 'bg-[#EEEEEE] text-[#3A3A3A] border border-[#D1D5DB] shadow-[inset_2px_2px_5px_rgba(0,0,0,0.04)]';
     default:
       return 'bg-[#F9FAFB] text-[#9CA3AF] border border-[#E5E7EB] opacity-60';
+=======
+      return 'bg-signal-available/15 text-signal-available border-signal-available/40';
+    case 'OCCUPIED':
+      return 'bg-signal-occupied/15 text-signal-occupied border-signal-occupied/40';
+    case 'RESERVED':
+      return 'bg-signal-reserved/15 text-signal-reserved border-signal-reserved/40';
+    default:
+      return 'bg-signal-offline/20 text-signal-offline border-signal-offline/40';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
   }
 }

@@ -5,7 +5,11 @@ import {
   SlotOccupancyReading,
 } from './aiAdapter.interface';
 import { prisma } from '../database/prismaClient';
+<<<<<<< HEAD
 import { DetectedStatus, DetectionType } from '../enums';
+=======
+import { DetectedStatus, DetectionType } from '@prisma/client';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 /** Small pool of realistic plates for repeatable manual testing */
 export const PLATE_POOL = ['MH12AB1234', 'KA01XY5678', 'TN09CD9001', 'DL3CAF0021', 'GJ01AA2222'];

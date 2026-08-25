@@ -25,7 +25,10 @@ import { getGates } from '../api/gates';
 import { getZones } from '../api/facilities';
 import { useAuthStore } from '../store/authStore';
 import { cameraIdOf, zoneIdOf } from '../lib/ids';
+<<<<<<< HEAD
 import ParkitLogo from '../assets/Parkit Logo.png';
+=======
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 const STEPS = [
   'Facility',
@@ -64,13 +67,19 @@ export const OnboardingWizard: React.FC = () => {
 
   if (loading) {
     return (
+<<<<<<< HEAD
       <div className="flex min-h-screen items-center justify-center bg-[#F5F5F5]">
         <Loader2 className="animate-spin text-[#2E2E2E]" size={32} />
+=======
+      <div className="flex min-h-screen items-center justify-center bg-bg-base">
+        <Loader2 className="animate-spin text-accent-brand" />
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       </div>
     );
   }
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-[#F5F5F5] p-6 font-sans">
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="flex items-center gap-4">
@@ -85,6 +94,13 @@ export const OnboardingWizard: React.FC = () => {
 
         {/* Stepper Pills */}
         <ol className="flex flex-wrap gap-2">
+=======
+    <div className="min-h-screen bg-bg-base p-6">
+      <div className="mx-auto max-w-6xl">
+        <p className="text-xs uppercase tracking-widest text-text-muted">Facility onboarding</p>
+        <h1 className="font-display text-4xl tracking-wide">SETUP WIZARD</h1>
+        <ol className="mt-4 flex flex-wrap gap-2">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           {STEPS.map((label, i) => {
             const n = i + 1;
             const canJumpBack = n >= 2 && n < step;
@@ -95,12 +111,21 @@ export const OnboardingWizard: React.FC = () => {
                 tabIndex={canJumpBack ? 0 : undefined}
                 onClick={canJumpBack ? () => { setError(''); setStep(n); } : undefined}
                 onKeyDown={canJumpBack ? (e) => e.key === 'Enter' && setStep(n) : undefined}
+<<<<<<< HEAD
                 className={`rounded-full px-4 py-1.5 text-xs font-semibold select-none transition-all ${
                   n === step
                     ? 'bg-[#2E2E2E] text-white shadow-[4px_4px_10px_rgba(46,46,46,0.22)]'
                     : n < step
                       ? 'bg-[#EEEEEE] text-[#2E2E2E] cursor-pointer hover:bg-[#E5E7EB]'
                       : 'clay-inset text-[#8C8C8C]'
+=======
+                className={`rounded-full px-3 py-1 text-xs select-none ${
+                  n === step
+                    ? 'bg-accent-brand text-white'
+                    : n < step
+                      ? 'bg-signal-available/20 text-signal-available cursor-pointer hover:bg-signal-available/40'
+                      : 'bg-bg-elevated text-text-muted'
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 }`}
               >
                 {n}. {label}
@@ -108,6 +133,7 @@ export const OnboardingWizard: React.FC = () => {
             );
           })}
         </ol>
+<<<<<<< HEAD
 
         {error && (
           <div className="clay-card-sm p-4 text-sm font-medium text-[#2E2E2E] border-l-4 border-l-[#2E2E2E]">
@@ -115,10 +141,18 @@ export const OnboardingWizard: React.FC = () => {
           </div>
         )}
 
+=======
+        {error && (
+          <div className="mt-4 rounded-md border border-signal-occupied/30 bg-signal-occupied/10 p-2 text-sm text-signal-occupied">
+            {error}
+          </div>
+        )}
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         {step >= 3 && (
           <button
             type="button"
             onClick={() => { setError(''); setStep(step - 1); }}
+<<<<<<< HEAD
             className="text-xs font-semibold text-[#6E6E6E] hover:text-[#2E2E2E] transition-colors"
           >
             ← Back to previous step
@@ -126,6 +160,14 @@ export const OnboardingWizard: React.FC = () => {
         )}
 
         <div className="clay-card p-8">
+=======
+            className="mt-4 text-sm text-text-muted hover:text-text-primary"
+          >
+            ← Back
+          </button>
+        )}
+        <div className="mt-3 rounded-xl border border-border-hairline bg-bg-surface p-6">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           {step === 1 && (
             <StepFacility
               busy={busy}
@@ -157,15 +199,25 @@ export const OnboardingWizard: React.FC = () => {
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
+<<<<<<< HEAD
     <label className="block text-xs font-semibold text-[#6E6E6E] uppercase tracking-wider">
       {label}
       <div className="mt-1.5">{children}</div>
+=======
+    <label className="block text-xs font-medium text-text-muted">
+      {label}
+      <div className="mt-1">{children}</div>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     </label>
   );
 }
 
 const inputClass =
+<<<<<<< HEAD
   'w-full clay-input px-3.5 py-2.5 text-sm font-medium text-[#2E2E2E]';
+=======
+  'w-full rounded-md border border-border-hairline bg-bg-elevated px-3 py-2 text-sm text-text-primary';
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
 
 function StepFacility({
   busy,
@@ -228,11 +280,16 @@ function StepFacility({
   };
 
   return (
+<<<<<<< HEAD
     <form onSubmit={submit} className="grid gap-4 md:grid-cols-2">
       <div className="md:col-span-2 pb-2 border-b border-[#E5E7EB]">
         <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Facility &amp; Admin Account</h2>
         <p className="text-xs text-[#6E6E6E] mt-0.5">Register the primary facility metadata and root operator credentials.</p>
       </div>
+=======
+    <form onSubmit={submit} className="grid gap-3 md:grid-cols-2">
+      <h2 className="font-display text-2xl tracking-wide md:col-span-2">Facility & admin account</h2>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       <Field label="Organization name">
         <input className={inputClass} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
       </Field>
@@ -266,9 +323,15 @@ function StepFacility({
       <Field label="Admin password">
         <input className={inputClass} type="password" value={form.adminPassword} onChange={(e) => setForm({ ...form, adminPassword: e.target.value })} required minLength={6} />
       </Field>
+<<<<<<< HEAD
       <div className="md:col-span-2 pt-3">
         <button type="submit" disabled={busy} className="clay-btn-primary px-7 py-3 text-sm font-semibold disabled:opacity-50">
           {busy ? 'Saving…' : 'Save and Continue'}
+=======
+      <div className="md:col-span-2 mt-2">
+        <button type="submit" disabled={busy} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white disabled:opacity-50">
+          {busy ? 'Saving…' : 'Save and continue'}
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         </button>
       </div>
     </form>
@@ -302,6 +365,7 @@ function StepZones({ busy, setBusy, setError, onDone }: any) {
 
   if (existing.length > 0) {
     return (
+<<<<<<< HEAD
       <div className="space-y-5">
         <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Parking Zones</h2>
         <p className="text-sm text-[#6E6E6E]">Zones are already saved. To change them you would need to restart onboarding.</p>
@@ -314,6 +378,20 @@ function StepZones({ busy, setBusy, setError, onDone }: any) {
           ))}
         </div>
         <button type="button" onClick={onDone} className="clay-btn-primary px-6 py-2.5 text-xs font-semibold">
+=======
+      <div className="space-y-4">
+        <h2 className="font-display text-2xl tracking-wide">Zones</h2>
+        <p className="text-sm text-text-muted">Zones are already saved. To change them you would need to restart onboarding.</p>
+        <div className="space-y-2">
+          {existing.map((z: any) => (
+            <div key={z.zone_id} className="flex items-center gap-4 rounded border border-border-hairline bg-bg-elevated px-3 py-2 text-sm">
+              <span className="font-medium">{z.name}</span>
+              <span className="text-text-muted">Floor {z.floor_level}</span>
+            </div>
+          ))}
+        </div>
+        <button type="button" onClick={onDone} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           Continue
         </button>
       </div>
@@ -321,8 +399,13 @@ function StepZones({ busy, setBusy, setError, onDone }: any) {
   }
 
   return (
+<<<<<<< HEAD
     <form onSubmit={submit} className="space-y-5">
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Configure Zones</h2>
+=======
+    <form onSubmit={submit} className="space-y-4">
+      <h2 className="font-display text-2xl tracking-wide">Zones</h2>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       {rows.map((row, i) => (
         <div key={i} className="grid gap-3 md:grid-cols-2">
           <Field label="Zone name">
@@ -341,12 +424,21 @@ function StepZones({ busy, setBusy, setError, onDone }: any) {
           </Field>
         </div>
       ))}
+<<<<<<< HEAD
       <button type="button" className="text-xs font-semibold text-[#2E2E2E] hover:underline" onClick={() => setRows([...rows, { name: '', floor_level: 0 }])}>
         + Add Zone
       </button>
       <div>
         <button type="submit" disabled={busy} className="clay-btn-primary px-6 py-3 text-sm font-semibold">
           {busy ? 'Saving…' : 'Save and Continue'}
+=======
+      <button type="button" className="text-sm text-accent-brand" onClick={() => setRows([...rows, { name: '', floor_level: 0 }])}>
+        + Add zone
+      </button>
+      <div>
+        <button type="submit" disabled={busy} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white">
+          {busy ? 'Saving…' : 'Save and continue'}
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         </button>
       </div>
     </form>
@@ -370,6 +462,11 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
           if (c.empty_lot_image_url) caps[c.camera_id] = c.empty_lot_image_url;
         });
         setCaptured(caps);
+<<<<<<< HEAD
+=======
+        // When cameras already exist, default the "add more" row to ANPR
+        // (slot cams are likely already covered; gates need ANPR cameras)
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         const hasAnpr = all.some((c: any) => c.camera_type === 'ANPR');
         if (!hasAnpr) {
           setRows([{ name: 'Entry Cam', camera_type: 'ANPR', zone_id: '' }]);
@@ -411,6 +508,7 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
 
   return (
     <div className="space-y-6">
+<<<<<<< HEAD
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Cameras &amp; Feeds</h2>
 
       {created.length > 0 && (
@@ -428,6 +526,21 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
                   className="clay-btn-primary px-4 py-2 text-xs font-semibold"
                   onClick={() => capture(c.camera_id)}
                 >
+=======
+      <h2 className="font-display text-2xl tracking-wide">Cameras</h2>
+
+      {created.length > 0 && (
+        <div className="space-y-2">
+          <p className="text-xs font-medium uppercase tracking-wider text-text-muted">Saved cameras</p>
+          {created.map((c: any) => (
+            <div key={c.camera_id} className="flex items-center justify-between rounded border border-border-hairline bg-bg-elevated p-3">
+              <div>
+                <p className="font-medium">{c.name}</p>
+                <p className="text-xs text-text-muted">{c.camera_type}</p>
+              </div>
+              {c.camera_type === 'PARKING_SLOT_CAM' && (
+                <button type="button" className="rounded bg-accent-brand px-3 py-1.5 text-xs text-white" onClick={() => capture(c.camera_id)}>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                   {(captured[c.camera_id] || c.empty_lot_image_url) ? 'Re-capture Empty-Lot' : 'Capture Empty-Lot Feed (Mock)'}
                 </button>
               )}
@@ -436,12 +549,21 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
         </div>
       )}
 
+<<<<<<< HEAD
       <form onSubmit={submit} className="space-y-4 clay-card-sm p-6">
         <p className="text-xs font-bold uppercase tracking-wider text-[#6E6E6E]">
           {created.length > 0 ? 'Add more cameras' : 'Add cameras'}
         </p>
         {created.length > 0 && !created.some((c: any) => c.camera_type === 'ANPR') && (
           <p className="clay-inset p-3 text-xs font-semibold text-[#2E2E2E]">
+=======
+      <form onSubmit={submit} className="space-y-3 rounded border border-border-hairline bg-bg-elevated p-4">
+        <p className="text-xs font-medium uppercase tracking-wider text-text-muted">
+          {created.length > 0 ? 'Add more cameras' : 'Add cameras'}
+        </p>
+        {created.length > 0 && !created.some((c: any) => c.camera_type === 'ANPR') && (
+          <p className="rounded border border-signal-reserved/30 bg-signal-reserved/10 px-3 py-2 text-xs text-signal-reserved">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             ⚠ No ANPR cameras yet. Gates require at least one ANPR camera — add one below before proceeding to gates.
           </p>
         )}
@@ -479,20 +601,35 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
             </Field>
           </div>
         ))}
+<<<<<<< HEAD
         <div className="flex items-center gap-3 pt-2">
           <button type="button" className="text-xs font-semibold text-[#2E2E2E] hover:underline" onClick={() => setRows([...rows, { name: '', camera_type: 'ANPR', zone_id: '' }])}>
             + Add Camera Row
           </button>
           <button type="submit" disabled={busy} className="clay-btn-primary px-5 py-2.5 text-xs font-semibold">
             {busy ? 'Saving…' : 'Save Cameras'}
+=======
+        <div className="flex items-center gap-3">
+          <button type="button" className="text-sm text-accent-brand" onClick={() => setRows([...rows, { name: '', camera_type: 'ANPR', zone_id: '' }])}>
+            + Add row
+          </button>
+          <button type="submit" disabled={busy} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white">
+            {busy ? 'Saving…' : 'Save cameras'}
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           </button>
         </div>
       </form>
 
       {(slotCams.length > 0 || anprCams.length > 0) && (
+<<<<<<< HEAD
         <div className="space-y-3 pt-2">
           {anprCams.length === 0 && (
             <p className="clay-inset p-3 text-xs font-semibold text-[#2E2E2E]">
+=======
+        <div className="space-y-2">
+          {anprCams.length === 0 && (
+            <p className="rounded border border-signal-reserved/30 bg-signal-reserved/10 px-3 py-2 text-xs text-signal-reserved">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               Gates require at least one ANPR camera. Add one above before continuing.
             </p>
           )}
@@ -500,9 +637,15 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
             type="button"
             disabled={!allCaptured || anprCams.length === 0}
             onClick={onDone}
+<<<<<<< HEAD
             className="clay-btn-primary px-6 py-3 text-sm font-semibold disabled:opacity-40"
           >
             Continue to Box Extraction
+=======
+            className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white disabled:opacity-40"
+          >
+            Continue
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           </button>
         </div>
       )}
@@ -512,21 +655,36 @@ function StepCameras({ busy, setBusy, setError, onDone }: any) {
 
 function BoxOverlay({ detections, image }: { detections: any[]; image?: string | null }) {
   return (
+<<<<<<< HEAD
     <div className="relative overflow-hidden rounded-2xl clay-inset border border-[#E5E7EB]">
       {image ? (
         <img src={imageUrl(image)} alt="Empty lot" className="block w-full" />
       ) : (
         <div className="flex h-48 items-center justify-center text-xs text-[#6E6E6E]">No empty-lot image</div>
+=======
+    <div className="relative overflow-hidden rounded border border-border-hairline bg-bg-elevated">
+      {image ? (
+        <img src={imageUrl(image)} alt="Empty lot" className="block w-full" />
+      ) : (
+        <div className="flex h-48 items-center justify-center text-xs text-text-muted">No empty-lot image</div>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       )}
       {detections.map((d) => {
         const b = d.bounding_box || {};
         return (
           <div
             key={d.detection_id}
+<<<<<<< HEAD
             className="absolute border-2 border-[#2E2E2E] bg-[#2E2E2E]/10"
             style={{ left: `${(b.x || 0) * 100}%`, top: `${(b.y || 0) * 100}%`, width: `${(b.width || 0) * 100}%`, height: `${(b.height || 0) * 100}%` }}
           >
             <span className="absolute -top-4 left-0 bg-[#2E2E2E] px-1.5 py-0.2 rounded font-mono text-[10px] text-white">
+=======
+            className="absolute border-2 border-accent-brand/80"
+            style={{ left: `${(b.x || 0) * 100}%`, top: `${(b.y || 0) * 100}%`, width: `${(b.width || 0) * 100}%`, height: `${(b.height || 0) * 100}%` }}
+          >
+            <span className="absolute -top-4 left-0 bg-accent-brand px-1 font-mono text-[10px] text-white">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               {d.suggested_code}
             </span>
           </div>
@@ -560,6 +718,7 @@ function StepExtract({ busy, setBusy, setError, onDone }: any) {
   const allRun = cameras.length > 0 && cameras.every((c) => results[c.camera_id]?.length);
 
   return (
+<<<<<<< HEAD
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Box Extraction</h2>
       <div className="grid gap-6 md:grid-cols-2">
@@ -573,6 +732,16 @@ function StepExtract({ busy, setBusy, setError, onDone }: any) {
                 onClick={() => run(c.camera_id)}
                 className="clay-btn-primary px-4 py-2 text-xs font-semibold"
               >
+=======
+    <div className="space-y-4">
+      <h2 className="font-display text-2xl tracking-wide">Box extraction</h2>
+      <div className="grid gap-4 md:grid-cols-2">
+        {cameras.map((c) => (
+          <div key={c.camera_id} className="space-y-2">
+            <div className="flex items-center justify-between">
+              <p className="font-medium">{c.name}</p>
+              <button type="button" disabled={busy} onClick={() => run(c.camera_id)} className="rounded bg-accent-brand px-3 py-1.5 text-xs text-white">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 Run Extraction (Mock)
               </button>
             </div>
@@ -580,6 +749,7 @@ function StepExtract({ busy, setBusy, setError, onDone }: any) {
           </div>
         ))}
       </div>
+<<<<<<< HEAD
       <button
         type="button"
         disabled={!allRun}
@@ -587,6 +757,10 @@ function StepExtract({ busy, setBusy, setError, onDone }: any) {
         className="clay-btn-primary px-6 py-3 text-sm font-semibold disabled:opacity-40"
       >
         Continue to Duplicate Review
+=======
+      <button type="button" disabled={!allRun} onClick={onDone} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white disabled:opacity-40">
+        Continue to duplicate review
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       </button>
     </div>
   );
@@ -625,6 +799,7 @@ function StepDuplicates({ setError, onDone }: any) {
   };
 
   return (
+<<<<<<< HEAD
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Duplicate Review</h2>
       <p className="text-sm text-[#6E6E6E]">Compare cameras side by side. Keep one slot box per physical space.</p>
@@ -661,6 +836,33 @@ function StepDuplicates({ setError, onDone }: any) {
                       className="clay-btn-secondary px-3 py-1.5 text-xs"
                       onClick={() => setDupPick(d)}
                     >
+=======
+    <div className="space-y-4">
+      <h2 className="font-display text-2xl tracking-wide">Duplicate review</h2>
+      <p className="text-sm text-text-muted">Compare cameras side by side. Keep one box per physical space.</p>
+      <div className="grid gap-4 md:grid-cols-2">
+        {payload?.cameras?.map((cam: any) => (
+          <div key={cam.camera_id} className="space-y-2">
+            <p className="font-medium">{cam.name}</p>
+            <BoxOverlay detections={cam.detections} image={cam.empty_lot_image_url} />
+            <div className="space-y-2">
+              {cam.detections.map((d: any) => (
+                <div key={d.detection_id} className="rounded border border-border-hairline bg-bg-elevated p-2 text-sm">
+                  <p className="font-mono">{d.suggested_code}</p>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    <button type="button" className="rounded bg-signal-available/20 px-2 py-1 text-xs text-signal-available" onClick={() => {
+                      setFinalize(d);
+                      // Pre-select the camera's own zone; fall back to zones[0] if the camera has no zone
+                      const camZoneId = cam.zone_id ? String(cam.zone_id) : String(zoneIdOf(zones[0]) || '');
+                      setForm({ slotCode: d.suggested_code, zoneId: camZoneId, slotType: 'NORMAL' });
+                    }}>
+                      This is a real space
+                    </button>
+                    <button type="button" className="rounded bg-signal-occupied/20 px-2 py-1 text-xs text-signal-occupied" onClick={() => act(() => rejectDetection(d.detection_id))}>
+                      Not a real space
+                    </button>
+                    <button type="button" className="rounded bg-signal-reserved/20 px-2 py-1 text-xs text-signal-reserved" onClick={() => setDupPick(d)}>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                       Duplicate of another camera's box
                     </button>
                   </div>
@@ -673,14 +875,23 @@ function StepDuplicates({ setError, onDone }: any) {
 
       {finalize && (
         <form
+<<<<<<< HEAD
           className="clay-card-sm p-5 space-y-3"
+=======
+          className="rounded border border-border-hairline bg-bg-elevated p-4"
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           onSubmit={(e) => {
             e.preventDefault();
             act(() => confirmDetection(finalize.detection_id, { slotCode: form.slotCode, zoneId: Number(form.zoneId), slotType: form.slotType }));
           }}
         >
+<<<<<<< HEAD
           <p className="text-sm font-bold text-[#2E2E2E]">Finalize {finalize.suggested_code}</p>
           <div className="grid gap-3 md:grid-cols-3">
+=======
+          <p className="mb-2 text-sm">Finalize {finalize.suggested_code}</p>
+          <div className="grid gap-2 md:grid-cols-3">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             <input className={inputClass} value={form.slotCode} onChange={(e) => setForm({ ...form, slotCode: e.target.value })} required />
             <select className={inputClass} value={form.zoneId} onChange={(e) => setForm({ ...form, zoneId: e.target.value })}>
               {zones.map((z) => (
@@ -693,13 +904,22 @@ function StepDuplicates({ setError, onDone }: any) {
               ))}
             </select>
           </div>
+<<<<<<< HEAD
           <button type="submit" className="clay-btn-primary px-5 py-2 text-xs font-semibold mt-2">Confirm Slot</button>
+=======
+          <button type="submit" className="mt-3 rounded bg-accent-brand px-3 py-1.5 text-xs text-white">Confirm slot</button>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         </form>
       )}
 
       {dupPick && (
+<<<<<<< HEAD
         <div className="clay-card-sm p-5 space-y-3">
           <p className="text-sm font-bold text-[#2E2E2E]">Mark {dupPick.suggested_code} as duplicate of:</p>
+=======
+        <div className="rounded border border-border-hairline bg-bg-elevated p-4">
+          <p className="mb-2 text-sm">Mark {dupPick.suggested_code} as duplicate of:</p>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           <div className="flex flex-wrap gap-2">
             {pending
               .filter((d: any) => d.camera_id !== dupPick.camera_id)
@@ -707,7 +927,11 @@ function StepDuplicates({ setError, onDone }: any) {
                 <button
                   key={d.detection_id}
                   type="button"
+<<<<<<< HEAD
                   className="clay-btn-secondary px-3 py-1.5 font-mono text-xs font-bold"
+=======
+                  className="rounded border border-border-hairline px-2 py-1 font-mono text-xs"
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                   onClick={() => act(() => markDuplicateDetection(dupPick.detection_id, d.detection_id))}
                 >
                   {d.suggested_code}
@@ -717,12 +941,16 @@ function StepDuplicates({ setError, onDone }: any) {
         </div>
       )}
 
+<<<<<<< HEAD
       <button
         type="button"
         disabled={pending.length > 0}
         onClick={onDone}
         className="clay-btn-primary px-6 py-3 text-sm font-semibold disabled:opacity-40"
       >
+=======
+      <button type="button" disabled={pending.length > 0} onClick={onDone} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white disabled:opacity-40">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         Continue
       </button>
     </div>
@@ -766,15 +994,24 @@ function StepGates({ busy, setBusy, setError, onDone }: any) {
   };
 
   return (
+<<<<<<< HEAD
     <form onSubmit={submit} className="space-y-6">
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Gates &amp; Barriers</h2>
+=======
+    <form onSubmit={submit} className="space-y-4">
+      <h2 className="font-display text-2xl tracking-wide">Gates</h2>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       {rows.map((row, i) => (
         <div key={i} className="grid gap-3 md:grid-cols-3">
           <input className={inputClass} value={row.name} onChange={(e) => {
             const next = [...rows];
             next[i] = { ...row, name: e.target.value };
             setRows(next);
+<<<<<<< HEAD
           }} required placeholder="Gate Name" />
+=======
+          }} required />
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
           <select className={inputClass} value={row.gate_type} onChange={(e) => {
             const next = [...rows];
             next[i] = { ...row, gate_type: e.target.value };
@@ -789,13 +1026,18 @@ function StepGates({ busy, setBusy, setError, onDone }: any) {
             next[i] = { ...row, camera_id: e.target.value };
             setRows(next);
           }}>
+<<<<<<< HEAD
             <option value="">ANPR Camera</option>
+=======
+            <option value="">ANPR camera</option>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             {cameras.map((c) => (
               <option key={cameraIdOf(c)} value={cameraIdOf(c)}>{c.name}</option>
             ))}
           </select>
         </div>
       ))}
+<<<<<<< HEAD
       <button type="button" className="text-xs font-semibold text-[#2E2E2E] hover:underline" onClick={() => setRows([...rows, { name: 'Main Exit', gate_type: 'EXIT', camera_id: '' }])}>
         + Add Gate Row
       </button>
@@ -805,11 +1047,23 @@ function StepGates({ busy, setBusy, setError, onDone }: any) {
         </button>
         {created.length > 0 && (
           <button type="button" onClick={onDone} className="clay-btn-secondary px-6 py-3 text-sm font-semibold">
+=======
+      <button type="button" className="text-sm text-accent-brand" onClick={() => setRows([...rows, { name: 'Main Exit', gate_type: 'EXIT', camera_id: '' }])}>
+        + Add gate
+      </button>
+      <div className="flex gap-3">
+        <button type="submit" disabled={busy} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white">
+          {busy ? 'Saving…' : created.length > 0 ? 'Update gates' : 'Save gates'}
+        </button>
+        {created.length > 0 && (
+          <button type="button" onClick={onDone} className="rounded-md border border-border-hairline px-4 py-2 text-sm text-text-primary">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
             Continue without changes
           </button>
         )}
       </div>
       {created.length > 0 && (
+<<<<<<< HEAD
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <p className="text-xs font-bold uppercase tracking-wider text-[#6E6E6E] md:col-span-2">Currently saved gates:</p>
           {created.map((g: any) => (
@@ -817,6 +1071,15 @@ function StepGates({ busy, setBusy, setError, onDone }: any) {
               <p className="font-bold text-[#2E2E2E]">{g.name}</p>
               <p className="font-mono text-xs text-[#6E6E6E] mt-0.5">{g.qr_code}</p>
               <div className="mt-3 inline-block rounded-2xl bg-white p-2.5 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.04)] border border-[#E5E7EB]">
+=======
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <p className="text-xs text-text-muted md:col-span-2">Currently saved gates (will be replaced on update):</p>
+          {created.map((g: any) => (
+            <div key={g.gate_id} className="rounded border border-border-hairline bg-bg-elevated p-3">
+              <p className="font-medium">{g.name}</p>
+              <p className="font-mono text-xs text-text-muted">{g.qr_code}</p>
+              <div className="mt-2 inline-block rounded bg-white p-2">
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 <QRCodeSVG value={JSON.stringify({ gateId: g.gate_id, qr_code: g.qr_code })} size={96} />
               </div>
             </div>
@@ -848,8 +1111,13 @@ function StepPricing({ busy, setBusy, setError, onDone }: any) {
     }
   };
   return (
+<<<<<<< HEAD
     <form onSubmit={submit} className="grid max-w-lg gap-4">
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Tariff &amp; Pricing Configuration</h2>
+=======
+    <form onSubmit={submit} className="grid max-w-lg gap-3">
+      <h2 className="font-display text-2xl tracking-wide">Pricing</h2>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       <Field label="Hourly rate">
         <input className={inputClass} type="number" step="0.01" value={form.hourlyRate} onChange={(e) => setForm({ ...form, hourlyRate: Number(e.target.value) })} />
       </Field>
@@ -862,11 +1130,15 @@ function StepPricing({ busy, setBusy, setError, onDone }: any) {
       <Field label="Minimum fee">
         <input className={inputClass} type="number" step="0.01" value={form.minimumFee} onChange={(e) => setForm({ ...form, minimumFee: Number(e.target.value) })} />
       </Field>
+<<<<<<< HEAD
       <div className="pt-2">
         <button type="submit" disabled={busy} className="clay-btn-primary px-6 py-3 text-sm font-semibold">
           Save and Continue
         </button>
       </div>
+=======
+      <button type="submit" disabled={busy} className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white">Save and continue</button>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     </form>
   );
 }
@@ -894,6 +1166,7 @@ function StepReview({ busy, setBusy, setError, onDone }: any) {
   };
 
   return (
+<<<<<<< HEAD
     <div className="space-y-6">
       <h2 className="font-display text-2xl font-bold tracking-tight text-[#2E2E2E]">Review &amp; Launch</h2>
       {summary && (
@@ -909,15 +1182,36 @@ function StepReview({ busy, setBusy, setError, onDone }: any) {
           <p key={c.camera_id} className="font-medium">
             <span className="text-[#2E2E2E] font-bold">{c.name}</span>: {c.confirmedSlots} confirmed slots
           </p>
+=======
+    <div className="space-y-4">
+      <h2 className="font-display text-2xl tracking-wide">Review & finish</h2>
+      {summary && (
+        <div className="grid gap-3 md:grid-cols-4">
+          <Stat label="Zones" value={summary.zoneCount} />
+          <Stat label="Confirmed slots" value={summary.confirmedSlotCount} />
+          <Stat label="Gates" value={summary.gateCount} />
+          <Stat label="Hourly rate" value={`${summary.pricing?.currency} ${summary.pricing?.hourly_rate}`} />
+        </div>
+      )}
+      <div className="space-y-1 text-sm text-text-muted">
+        {summary?.slotsPerCamera?.map((c: any) => (
+          <p key={c.camera_id}>{c.name}: {c.confirmedSlots} confirmed slots</p>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
         ))}
       </div>
       <button
         type="button"
         disabled={busy || pending > 0}
         onClick={finish}
+<<<<<<< HEAD
         className="clay-btn-primary px-8 py-3.5 text-sm font-semibold disabled:opacity-40"
       >
         Complete Onboarding &amp; Open Control Room
+=======
+        className="rounded-md bg-accent-brand px-4 py-2 text-sm text-white disabled:opacity-40"
+      >
+        Complete Onboarding
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
       </button>
     </div>
   );
@@ -925,9 +1219,15 @@ function StepReview({ busy, setBusy, setError, onDone }: any) {
 
 function Stat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
+<<<<<<< HEAD
     <div className="clay-card-sm p-4 flex flex-col justify-between">
       <p className="text-[11px] font-bold uppercase tracking-wider text-[#6E6E6E]">{label}</p>
       <p className="font-display text-2xl font-bold text-[#2E2E2E] mt-2">{value}</p>
+=======
+    <div className="rounded border border-border-hairline bg-bg-elevated p-3">
+      <p className="text-[11px] uppercase tracking-wider text-text-muted">{label}</p>
+      <p className="font-display text-3xl">{value}</p>
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
     </div>
   );
 }

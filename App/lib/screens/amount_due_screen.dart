@@ -43,7 +43,11 @@ class AmountDueScreen extends ConsumerWidget {
             Container(
               width: 64,
               height: 64,
+<<<<<<< HEAD
               decoration: const BoxDecoration(
+=======
+              decoration: BoxDecoration(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 color: Pk.success,
                 borderRadius: Pk.r8,
               ),
@@ -83,16 +87,27 @@ class AmountDueScreen extends ConsumerWidget {
             Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+<<<<<<< HEAD
                 decoration: BoxDecoration(
                 color: Pk.warning.withAlpha((0.12 * 255).round()),
                 borderRadius: Pk.r6,
                 border: Border.all(color: Pk.warning.withAlpha((0.3 * 255).round())),
+=======
+              decoration: BoxDecoration(
+                color: Pk.warning.withOpacity(0.12),
+                borderRadius: Pk.r6,
+                border: Border.all(color: Pk.warning.withOpacity(0.3)),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
               ),
               child: Text(
                 session?.paymentStatus == 'PENDING'
                     ? 'Payment Pending'
                     : (session?.paymentStatus ?? 'Pending'),
+<<<<<<< HEAD
                 style: const TextStyle(
+=======
+                style: TextStyle(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                     color: Pk.warning,
                     fontSize: 12,
                     fontWeight: FontWeight.w600),

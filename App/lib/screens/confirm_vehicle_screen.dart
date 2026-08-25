@@ -95,12 +95,17 @@ class _ConfirmVehicleScreenState
                 fontFamily: 'monospace',
                 letterSpacing: 3,
               ),
+<<<<<<< HEAD
               decoration: const InputDecoration(
+=======
+              decoration: InputDecoration(
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 suffixText: 'edit',
                 suffixStyle: TextStyle(
                     color: Pk.primary, fontSize: 12),
                 filled: true,
                 fillColor: Pk.surface,
+<<<<<<< HEAD
                 contentPadding: EdgeInsets.symmetric(
                     horizontal: 16, vertical: 16),
                 border: OutlineInputBorder(
@@ -110,11 +115,26 @@ class _ConfirmVehicleScreenState
                 enabledBorder: OutlineInputBorder(
                   borderRadius: Pk.r6,
                   borderSide: BorderSide(color: Pk.border),
+=======
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 16),
+                border: OutlineInputBorder(
+                  borderRadius: Pk.r6,
+                  borderSide: const BorderSide(color: Pk.border),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: Pk.r6,
+                  borderSide: const BorderSide(color: Pk.border),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: Pk.r6,
                   borderSide:
+<<<<<<< HEAD
                       BorderSide(color: Pk.primary, width: 1.5),
+=======
+                      const BorderSide(color: Pk.primary, width: 1.5),
+>>>>>>> 5cdfde27934796fd0dec8c9a91607626ed85d05d
                 ),
               ),
             ),
