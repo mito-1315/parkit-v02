@@ -1,0 +1,3 @@
+// services/ — the actual business logic
+// allocationEngine.ts will live here (Phase 4)
+// Controllers should stay thin; this is where the real work happens

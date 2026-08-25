@@ -1,0 +1,110 @@
+export enum SlotStatus {
+  AVAILABLE = 'AVAILABLE',
+  RESERVED = 'RESERVED',
+  OCCUPIED = 'OCCUPIED',
+  MAINTENANCE = 'MAINTENANCE',
+  BLOCKED = 'BLOCKED',
+  UNKNOWN = 'UNKNOWN'
+}
+
+export enum SlotType {
+  NORMAL = 'NORMAL',
+  EV = 'EV',
+  ACCESSIBLE = 'ACCESSIBLE',
+  VIP = 'VIP',
+  TWO_WHEELER = 'TWO_WHEELER',
+  HEAVY = 'HEAVY'
+}
+
+export enum CameraType {
+  PARKING_SLOT_CAM = 'PARKING_SLOT_CAM',
+  GATE_ENTRY_CAM = 'GATE_ENTRY_CAM',
+  GATE_EXIT_CAM = 'GATE_EXIT_CAM',
+  ANPR = 'ANPR'
+}
+
+export enum CameraStatus {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+  MAINTENANCE = 'MAINTENANCE'
+}
+
+export enum GateStatus {
+  ONLINE = 'ONLINE',
+  OFFLINE = 'OFFLINE',
+  MAINTENANCE = 'MAINTENANCE'
+}
+
+export enum GateType {
+  ENTRY = 'ENTRY',
+  EXIT = 'EXIT',
+  BOTH = 'BOTH'
+}
+
+export enum AdminRole {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  FACILITY_ADMIN = 'FACILITY_ADMIN',
+  SECURITY_STAFF = 'SECURITY_STAFF'
+}
+
+export enum VehicleType {
+  CAR = 'CAR',
+  BIKE = 'BIKE',
+  EV_CAR = 'EV_CAR',
+  EV_BIKE = 'EV_BIKE',
+  TRUCK = 'TRUCK',
+  OTHER = 'OTHER'
+}
+
+export enum SessionStatus {
+  RESERVED = 'RESERVED',
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED'
+}
+
+export enum PaymentStatus {
+  NOT_APPLICABLE = 'NOT_APPLICABLE',
+  PENDING = 'PENDING',
+  PAID = 'PAID'
+}
+
+export enum DetectionType {
+  SLOT_OCCUPANCY = 'SLOT_OCCUPANCY',
+  VEHICLE_PLATE = 'VEHICLE_PLATE'
+}
+
+export enum DetectedStatus {
+  EMPTY = 'EMPTY',
+  OCCUPIED = 'OCCUPIED'
+}
+
+export enum AlertType {
+  PARKING_FULL = 'PARKING_FULL',
+  CAMERA_OFFLINE = 'CAMERA_OFFLINE',
+  SLOT_CONFLICT = 'SLOT_CONFLICT',
+  LOW_CONFIDENCE_DETECTION = 'LOW_CONFIDENCE_DETECTION',
+  UNAUTHORIZED_SLOT_OCCUPANCY = 'UNAUTHORIZED_SLOT_OCCUPANCY',
+  ENTRANCE_CONGESTION = 'ENTRANCE_CONGESTION',
+  OTHER = 'OTHER'
+}
+
+export enum AlertSeverity {
+  INFO = 'INFO',
+  WARNING = 'WARNING',
+  CRITICAL = 'CRITICAL'
+}
+
+export enum OnboardingStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED'
+}
+
+export enum RawDetectionStatus {
+  PENDING_REVIEW = 'PENDING_REVIEW',
+  CONFIRMED = 'CONFIRMED',
+  REJECTED = 'REJECTED',
+  DUPLICATE_REMOVED = 'DUPLICATE_REMOVED'
+}

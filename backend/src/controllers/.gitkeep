@@ -1,0 +1,2 @@
+// controllers/ — populated from Phase 2 onward
+// One file per resource: parses req, calls a service, shapes res

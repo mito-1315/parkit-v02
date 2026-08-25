@@ -1,0 +1,48 @@
+name: smart_parking_app
+description: Smart Parking System — Parker App (Flutter)
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # HTTP client
+  dio: ^5.4.3+1
+
+  # Real-time (Socket.IO)
+  socket_io_client: ^2.0.3+1
+
+  # Declarative routing
+  go_router: ^14.2.0
+
+  # QR code scanning
+  mobile_scanner: ^5.2.3
+
+  # Token persistence
+  shared_preferences: ^2.3.2
+
+  # Date / duration formatting
+  intl: ^0.19.0
+
+  # Cupertino icons for iOS-style icons
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/

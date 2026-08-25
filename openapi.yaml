@@ -1,0 +1,921 @@
+openapi: 3.0.0
+info:
+  title: Smart Parking API
+  version: 1.0.0
+  description: API for the Smart Parking System
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local development server
+  - url: http://localhost:4000/dev/mock
+    description: Local Dev API (mock AI endpoints)
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user (Parker)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, password]
+              properties:
+                name: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+                phone_number: { type: string }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/login:
+    post:
+      summary: Login user
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/admin/register:
+    post:
+      summary: Register an admin
+      security: [] # Allowed only on first run or by existing admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [facility_id, name, email, password, role]
+              properties:
+                facility_id: { type: integer }
+                name: { type: string }
+                email: { type: string, format: email }
+                password: { type: string, minLength: 6 }
+                phone_number: { type: string }
+                role: { type: string, enum: [SUPER_ADMIN, FACILITY_ADMIN, OPERATOR] }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/admin/login:
+    post:
+      summary: Login admin
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/refresh:
+    post:
+      summary: Refresh token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken: { type: string }
+
+  /auth/logout:
+    post:
+      summary: Logout
+      responses:
+        '200':
+          description: Success
+
+  /facilities:
+    get:
+      summary: List facilities
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create facility
+      responses:
+        '201':
+          description: Created
+  /facilities/{id}:
+    get:
+      summary: Get facility
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update facility
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete facility
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Success
+
+  /facilities/{facilityId}/zones:
+    get:
+      summary: List zones in facility
+      parameters:
+        - name: facilityId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create zone
+      parameters:
+        - name: facilityId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '201':
+          description: Created
+  /facilities/{facilityId}/zones/{id}:
+    get:
+      summary: Get zone
+      parameters:
+        - name: facilityId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update zone
+      parameters:
+        - name: facilityId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete zone
+      parameters:
+        - name: facilityId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Success
+
+  /zones/{zoneId}/slots:
+    get:
+      summary: List slots in zone
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create slot
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '201':
+          description: Created
+  /zones/{zoneId}/slots/{id}:
+    get:
+      summary: Get slot
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update slot
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete slot
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Success
+  /zones/{zoneId}/slots/{id}/status:
+    patch:
+      summary: Update slot status
+      parameters:
+        - name: zoneId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+
+  /cameras:
+    get:
+      summary: List cameras
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create camera
+      responses:
+        '201':
+          description: Created
+  /cameras/{id}:
+    get:
+      summary: Get camera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update camera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete camera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Success
+
+  /cameras/{id}/capture-empty-lot:
+    post:
+      summary: Assign a mocked empty-lot placeholder image to a slot-watching camera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Camera with empty_lot_image_url set
+
+  /cameras/{id}/extract-boxes:
+    post:
+      summary: Run mocked parking-box extraction for a camera
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: RawSlotDetection rows for that camera
+
+  /onboarding/status:
+    get:
+      summary: Public onboarding status for the landing screen
+      security: []
+      responses:
+        '200':
+          description: Whether any facility exists, plus onboardingStatus and onboardingStep
+
+  /onboarding/facility:
+    post:
+      summary: Step 1 — create Facility and first FACILITY_ADMIN
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, address, city, state, country, pincode, contact_phone, contact_email, admin]
+              properties:
+                name: { type: string }
+                address: { type: string }
+                city: { type: string }
+                state: { type: string }
+                country: { type: string }
+                pincode: { type: string }
+                contact_phone: { type: string }
+                contact_email: { type: string, format: email }
+                admin:
+                  type: object
+                  required: [name, email, password]
+                  properties:
+                    name: { type: string }
+                    email: { type: string, format: email }
+                    password: { type: string }
+                    phone_number: { type: string }
+      responses:
+        '201':
+          description: Facility, admin, and JWT tokens
+
+  /onboarding/zones:
+    post:
+      summary: Step 2 — bulk-create zones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [zones]
+              properties:
+                zones:
+                  type: array
+                  items:
+                    type: object
+                    required: [name, floor_level]
+                    properties:
+                      name: { type: string }
+                      floor_level: { type: integer }
+                      description: { type: string }
+      responses:
+        '201':
+          description: Created zones
+
+  /onboarding/cameras:
+    post:
+      summary: Step 3 — bulk-create cameras
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cameras]
+              properties:
+                cameras:
+                  type: array
+                  items:
+                    type: object
+                    required: [name, camera_type]
+                    properties:
+                      name: { type: string }
+                      camera_type: { type: string, enum: [PARKING_SLOT_CAM, GATE_ENTRY_CAM, GATE_EXIT_CAM, ANPR] }
+                      zone_id: { type: integer, nullable: true }
+                      location_description: { type: string }
+      responses:
+        '201':
+          description: Created cameras
+
+  /onboarding/raw-detections:
+    get:
+      summary: Step 5 — raw detections grouped by camera
+      parameters:
+        - name: status
+          in: query
+          schema: { type: string, enum: [PENDING_REVIEW, CONFIRMED, REJECTED, DUPLICATE_REMOVED] }
+      responses:
+        '200':
+          description: Cameras with their detections
+
+  /onboarding/gates:
+    post:
+      summary: Step 6 — create gates with auto-generated QR codes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [gates]
+              properties:
+                gates:
+                  type: array
+                  items:
+                    type: object
+                    required: [name, gate_type]
+                    properties:
+                      name: { type: string }
+                      gate_type: { type: string, enum: [ENTRY, EXIT, BOTH] }
+                      camera_id: { type: integer }
+                      location_description: { type: string }
+      responses:
+        '201':
+          description: Created gates including qr_code
+
+  /onboarding/pricing:
+    post:
+      summary: Step 7 — set facility pricing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hourlyRate: { type: number }
+                currency: { type: string }
+                gracePeriodMinutes: { type: integer }
+                minimumFee: { type: number }
+      responses:
+        '200':
+          description: Updated facility
+
+  /onboarding/complete:
+    post:
+      summary: Step 8 — validate and mark onboarding COMPLETED
+      responses:
+        '200':
+          description: Facility with onboardingStatus COMPLETED
+        '400':
+          description: Missing confirmed slots or ANPR cameras on gates
+
+  /onboarding/summary:
+    get:
+      summary: Read-only onboarding review payload
+      responses:
+        '200':
+          description: Counts, slots per camera, pricing
+
+  /raw-detections/{id}/reject:
+    post:
+      summary: Mark a raw detection as not a real parking space
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Detection marked REJECTED
+
+  /raw-detections/{id}/mark-duplicate:
+    post:
+      summary: Mark a raw detection as a duplicate of another camera's box
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [duplicateOfId]
+              properties:
+                duplicateOfId: { type: integer }
+      responses:
+        '200':
+          description: Detection marked DUPLICATE_REMOVED
+
+  /raw-detections/{id}/confirm:
+    post:
+      summary: Confirm a raw detection and promote it to a ParkingSlot
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [slotCode, zoneId, slotType]
+              properties:
+                slotCode: { type: string }
+                zoneId: { type: integer }
+                slotType: { type: string, enum: [NORMAL, EV, ACCESSIBLE, VIP, TWO_WHEELER, HEAVY] }
+      responses:
+        '201':
+          description: Confirmed detection and created ParkingSlot
+
+  /gates:
+    get:
+      summary: List gates
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create gate
+      responses:
+        '201':
+          description: Created
+  /gates/{id}:
+    get:
+      summary: Get gate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update gate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete gate
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Success
+
+  /gates/{id}/scan-entry:
+    post:
+      summary: Detect the plate at an entry gate without allocating a slot
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Detected license plate and confidence
+
+  /gates/{id}/confirm-entry:
+    post:
+      summary: Confirm the plate and allocate the nearest AVAILABLE slot
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [licensePlate]
+              properties:
+                licensePlate: { type: string }
+      responses:
+        '201':
+          description: Created parking session
+        '200':
+          description: Parking full or gate not found
+
+  /gates/{id}/scan-exit:
+    post:
+      summary: Scan an exit gate, close the session, and compute parking_fee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId: { type: integer }
+                licensePlate: { type: string }
+      responses:
+        '200':
+          description: Completed session with parking_fee and paymentStatus PENDING
+
+  /admin-users/me:
+    get:
+      summary: Get self profile
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update self profile
+      responses:
+        '200':
+          description: Success
+
+  /users/me:
+    get:
+      summary: Get self profile
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update self profile
+      responses:
+        '200':
+          description: Success
+
+  /vehicles:
+    get:
+      summary: List own vehicles
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create vehicle
+      responses:
+        '201':
+          description: Created
+  /vehicles/{id}:
+    get:
+      summary: Get own vehicle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update own vehicle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete own vehicle
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Success
+
+  /allocations:
+    post:
+      summary: Allocate a parking slot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [licensePlate, entryGateId]
+              properties:
+                licensePlate: { type: string }
+                entryGateId: { type: integer }
+      responses:
+        '201':
+          description: Created
+        '200':
+          description: Parking full or gate not found
+
+  /sessions:
+    get:
+      summary: Get session history
+      responses:
+        '200':
+          description: Success
+
+  /sessions/active:
+    get:
+      summary: Get active sessions
+      responses:
+        '200':
+          description: Success
+
+  /sessions/{id}/confirm-entry:
+    post:
+      summary: Confirm entry for a session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+
+  /sessions/{id}/confirm-exit:
+    post:
+      summary: Confirm exit for a session
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [exitGateId]
+              properties:
+                exitGateId: { type: integer }
+      responses:
+        '200':
+          description: Success
+
+  /alerts:
+    get:
+      summary: Get alerts
+      responses:
+        '200':
+          description: Success
+
+  /alerts/{id}/resolve:
+    post:
+      summary: Resolve an alert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+
+  /detections:
+    post:
+      summary: Ingest detection from AI
+      security: [] # Usually protected by api key or network boundary, but mock is unauth
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: List detections
+      responses:
+        '200':
+          description: Success
+
+  /detect-plate:
+    post:
+      summary: Trigger plate detection (Mock)
+      servers:
+        - url: http://localhost:4000/dev/mock
+      responses:
+        '200':
+          description: Success
+
+  /flip-slot:
+    post:
+      summary: Force flip slot (Mock)
+      servers:
+        - url: http://localhost:4000/dev/mock
+      responses:
+        '200':
+          description: Success
+
+  /scenario/{name}:
+    post:
+      summary: Run scenario (Mock)
+      servers:
+        - url: http://localhost:4000/dev/mock
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Success
+
+components:
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }

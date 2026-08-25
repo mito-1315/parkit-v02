@@ -1,0 +1,83 @@
+# =====================
+# Node / TypeScript
+# =====================
+node_modules/
+dist/
+build/
+*.js.map
+*.d.ts.map
+.tsbuildinfo
+
+# =====================
+# Environment / secrets
+# =====================
+.env
+.env.local
+.env.*.local
+
+# =====================
+# Logs
+# =====================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pino.log
+
+# =====================
+# Prisma
+# =====================
+# Keep migrations — they are source of truth
+# Do NOT ignore prisma/migrations/
+prisma/*.db
+prisma/*.db-journal
+
+# =====================
+# Testing / coverage
+# =====================
+coverage/
+.nyc_output/
+
+# =====================
+# Flutter / Dart
+# =====================
+# Flutter-generated build artifacts
+App/build/
+App/.dart_tool/
+App/.flutter-plugins
+App/.flutter-plugins-dependencies
+App/.packages
+App/.pub-cache/
+App/.pub/
+App/android/.gradle/
+App/android/local.properties
+App/android/key.properties
+App/ios/.symlinks/
+App/ios/Pods/
+App/ios/Podfile.lock
+*.g.dart
+*.freezed.dart
+
+# =====================
+# OS
+# =====================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =====================
+# IDE
+# =====================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =====================
+# Docker
+# =====================
+postgres-data/
